@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">TravelApp</string>
+    <string name="sign_in">Sign in</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="skip">Skip</string>
+    <string name="opening_remarks">Let’s enjoy the Beautiful World</string>
+    <string name="codeby_student">CodeBy Student</string>
+    <string name="tickets">Tickets</string>
+    <string name="tickets_details">Save your tickets and enjoy</string>
+    <string name="hotels">Hotels</string>
+    <string name="slogan_home">We focus a lot on helping the first time or inexperienced traveler head out</string>
+    <string name="logo_home">logo_home</string>
+    <string name="tickets_img">Tickets</string>
+    <string name="hotels_img">hotels</string>
+    <string name="hotels_descr">The Ideal Hotel at a Great Price</string>
+    <string name="adventure_img">adventure</string>
+    <string name="adventure">Adventure</string>
+    <string name="adventure_descr">Find &amp; book tours, adventures, activities</string>
+    <string name="let_s_travel_now"><html>Let’s <b>travel</b> now</html></string>
+    <string name="account_image">account image</string>
+    <string name="the_best_trips_for_you">The best trips for you</string>
+    <string name="search">Search</string>
+    <string name="see_all">See all</string>
+    <string name="recommended">Recommended</string>
+</resources>
