@@ -1,4 +1,4 @@
-package com.example.travelapp
+package com.example.travelapp.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.travelapp.R
 
 class HomeActivity : AppCompatActivity() {
     // Пример обработки результата из вызванного намерения
@@ -26,8 +27,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun adventureOnClick(view: View) {
-        val sender = Intent(this, AdventureActivity::class.java)
-        sender.putExtra("message", "i am from Home activity")
-        advLauncher.launch(sender)
+        val advIntent = Intent(this, AdventureActivity::class.java)
+        advIntent.putExtra("message", "i am from Home activity")
+        advLauncher.launch(advIntent)
     }
 }

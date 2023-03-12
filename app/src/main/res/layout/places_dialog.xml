@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/places_dialog_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="47dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/editTextInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:ems="10"
+            android:hint="Description"
+            android:inputType="textPersonName"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/editTextDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:ems="10"
+            android:hint="Detail"
+            android:inputType="textPersonName"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="59dp"
+            android:layout_marginBottom="21dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:layout_weight="1"
+                android:backgroundTint="#EE8B52"
+                android:fontFamily="@font/raleway_regular"
+                android:padding="15dp"
+                android:text="Cancel"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                app:cornerRadius="10dp" />
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_weight="1"
+                android:backgroundTint="#EE5252"
+                android:fontFamily="@font/raleway_regular"
+                android:padding="15dp"
+                android:text="Delete"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                app:cornerRadius="10dp" />
+
+            <Button
+                android:id="@+id/btnAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="11dp"
+                android:layout_weight="1"
+                android:backgroundTint="#05BFAB"
+                android:fontFamily="@font/raleway_regular"
+                android:padding="15dp"
+                android:text="Add"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                app:cornerRadius="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

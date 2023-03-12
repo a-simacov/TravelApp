@@ -12,13 +12,16 @@
         android:theme="@style/Theme.TravelApp"
         tools:targetApi="31">
         <activity
-            android:name=".AdventureActivity"
+            android:name=".ui.PlaceActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".ui.AdventureActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
