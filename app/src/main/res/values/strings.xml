@@ -19,7 +19,7 @@
     <string name="let_s_travel_now"><html>Let’s <b>travel</b> now</html></string>
     <string name="account_image">account image</string>
     <string name="the_best_trips_for_you">The best trips for you</string>
-    <string name="search">Search</string>
+    <string name="search">     Search</string>
     <string name="see_all">See all</string>
     <string name="recommended">Recommended</string>
 </resources>
