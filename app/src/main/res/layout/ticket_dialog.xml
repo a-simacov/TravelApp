@@ -16,31 +16,51 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/editTextName"
+            android:id="@+id/editTextCityFrom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Name"
+            android:hint="Departure city"
             android:inputType="textPersonName"
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/editTextInfo"
+            android:id="@+id/editTextDepartureDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="23dp"
             android:ems="10"
-            android:hint="Description"
+            android:hint="Departure date"
             android:inputType="textPersonName"
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/editTextDetail"
+            android:id="@+id/editTextCityTo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="23dp"
             android:ems="10"
-            android:hint="Detail"
+            android:hint="Arrival city"
+            android:inputType="textPersonName"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/editTextArrivalDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:ems="10"
+            android:hint="Arrival date"
+            android:inputType="textPersonName"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/editTextAirline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:ems="10"
+            android:hint="Airline"
             android:inputType="textPersonName"
             android:textSize="24sp" />
 
@@ -52,7 +72,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnCancel"
+                android:id="@+id/btnTicketCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="11dp"
@@ -67,7 +87,7 @@
                 app:cornerRadius="10dp" />
 
             <Button
-                android:id="@+id/btnDelete"
+                android:id="@+id/btnTicketsDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -83,7 +103,7 @@
                 app:cornerRadius="10dp" />
 
             <Button
-                android:id="@+id/btnAdd"
+                android:id="@+id/btnTicketsAdd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="11dp"

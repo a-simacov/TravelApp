@@ -5,30 +5,28 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.travelapp.R
+import com.example.travelapp.ui.adventure.AdventureActivity
+import com.example.travelapp.ui.tickets.TicketsActivity
 
 class HomeActivity : AppCompatActivity() {
-    // Пример обработки результата из вызванного намерения
-    private var advLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) {
-        result: ActivityResult ->
-        if (result.resultCode == RESULT_OK) {
-            val response = result.data?.getStringExtra("responseMessage") ?: ""
-            Log.i("ActivitiesComm", response)
-            // обрабатываем наш ответ
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-    }
 
-    fun adventureOnClick(view: View) {
-        val advIntent = Intent(this, AdventureActivity::class.java)
-        advIntent.putExtra("message", "i am from Home activity")
-        advLauncher.launch(advIntent)
+        findViewById<ConstraintLayout>(R.id.tickets).setOnClickListener{
+            this.startActivity(
+                Intent(this, TicketsActivity::class.java)
+            )
+        }
+        findViewById<ConstraintLayout>(R.id.adventure).setOnClickListener{
+            this.startActivity(
+                Intent(this, AdventureActivity::class.java)
+            )
+        }
     }
 }

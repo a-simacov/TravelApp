@@ -166,8 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/adventure_background"
-            android:onClick="adventureOnClick">
+            android:background="@drawable/adventure_background">
 
             <ImageView
                 android:id="@+id/imageView7"

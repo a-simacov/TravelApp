@@ -12,9 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.travelapp.R
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
+import com.example.travelapp.ui.adventure.AdventureViewModel
 import com.example.travelapp.ui.PlaceActivity
 
-class CustomRecyclerAdapter(private val places: List<Places>) : RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
+class CustomRecyclerAdapter(private val viewModel: AdventureViewModel) : RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
+    var places = mutableListOf<Places>()
+
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val infoTextView: TextView = itemView.findViewById(R.id.textInfo)
         val nameTextView: TextView = itemView.findViewById(R.id.textPlace)
@@ -35,7 +38,7 @@ class CustomRecyclerAdapter(private val places: List<Places>) : RecyclerView.Ada
         holder.nameTextView.text = place.name
         holder.infoTextView.text = place.info
         holder.constraintLayout.setOnClickListener { openPlace(holder, place) }
-        holder.btnDeletePlace.setOnClickListener { deletePlace(holder, place) }
+        holder.btnDeletePlace.setOnClickListener { deletePlace(place, position) }
     }
 
     override fun getItemCount(): Int {
@@ -53,9 +56,9 @@ class CustomRecyclerAdapter(private val places: List<Places>) : RecyclerView.Ada
         context.startActivity(intent)
     }
 
-    private fun deletePlace(holder: MyViewHolder, place: Places) {
-        Thread {
-            holder.db.getDao().deletePlace(place)
-        }.start()
+    private fun deletePlace(place: Places, position: Int) {
+        viewModel.delete(place)
+        places.removeAt(position)
+        notifyItemRemoved(position)
     }
 }
