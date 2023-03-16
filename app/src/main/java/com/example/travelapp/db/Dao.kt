@@ -24,4 +24,7 @@ interface Dao {
     fun getAllTickets(): LiveData<List<Ticket>>
     @Query("DELETE FROM tickets")
     fun deleteTickets()
+
+    @Query("DELETE FROM tickets WHERE id = :id")
+    fun deleteTicketById(id: Int)
 }

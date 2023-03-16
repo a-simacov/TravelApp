@@ -10,18 +10,19 @@ import kotlin.concurrent.thread
 class TicketsViewModel(application: Application) : AndroidViewModel(application) {
 
     var tickets: LiveData<List<Ticket>>
-    private val repository: TicketsRepository
+    private val repository: Repository
 
     init {
         val dao = Db.getDb(application).getDao()
-        repository = TicketsRepository(dao)
+        repository = Repository(dao)
         tickets = repository.tickets
     }
 
-    fun delete(ticket: Ticket) { thread { repository.delete(ticket) } }
+    fun delete(ticket: Ticket) { thread { repository.deleteTicket(ticket) } }
 
     fun deleteTickets() { thread { repository.deleteTickets() } }
 
     fun add(ticket: Ticket) { thread { repository.addTicket(ticket) } }
 
+    fun deleteTicketById(id: Int) { thread { repository.deleteTicketById(id) } }
 }

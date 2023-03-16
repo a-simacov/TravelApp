@@ -13,7 +13,7 @@ import com.example.travelapp.R
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
 import com.example.travelapp.ui.adventure.AdventureViewModel
-import com.example.travelapp.ui.PlaceActivity
+import com.example.travelapp.ui.adventure.PlaceActivity
 
 class CustomRecyclerAdapter(private val viewModel: AdventureViewModel) : RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
     var places = mutableListOf<Places>()

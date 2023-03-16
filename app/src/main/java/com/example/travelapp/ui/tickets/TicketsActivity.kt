@@ -55,6 +55,7 @@ class TicketsActivity : AppCompatActivity() {
             cityTo = dialog.findViewById<TextView>(R.id.editTextCityTo)?.text.toString(),
             arrivalDate = dialog.findViewById<TextView>(R.id.editTextArrivalDate)?.text.toString(),
             airline = dialog.findViewById<TextView>(R.id.editTextAirline)?.text.toString(),
+            qrLink = ""
         )
         viewModel.add(ticket)
         dialog.dismiss()

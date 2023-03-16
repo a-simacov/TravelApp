@@ -3,24 +3,23 @@ package com.example.travelapp.ui.adventure
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import com.example.travelapp.db.AdventureRepository
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
+import com.example.travelapp.db.Repository
 import kotlin.concurrent.thread
 
 class AdventureViewModel(application: Application) : AndroidViewModel(application) {
 
     var places: LiveData<List<Places>>
-    private val repository: AdventureRepository
+    private val repository: Repository
 
     init {
         val dao = Db.getDb(application).getDao()
-        repository = AdventureRepository(dao)
+        repository = Repository(dao)
         places = repository.places
     }
 
-    fun delete(place: Places) { thread { repository.delete(place) } }
+    fun delete(place: Places) { thread { repository.deletePlace(place) } }
 
     fun deletePlaces() { thread { repository.deletePlaces() } }
 

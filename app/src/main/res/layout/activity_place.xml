@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DDF9F7"
-    tools:context=".ui.PlaceActivity">
+    tools:context=".ui.adventure.PlaceActivity">
 
     <TextView
         android:id="@+id/textDetail"

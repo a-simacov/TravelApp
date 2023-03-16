@@ -12,13 +12,13 @@
         android:theme="@style/Theme.TravelApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.TicketActivity"
+            android:name=".ui.tickets.TicketActivity"
             android:exported="false" />
         <activity
             android:name=".ui.tickets.TicketsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.PlaceActivity"
+            android:name=".ui.adventure.PlaceActivity"
             android:exported="false" />
         <activity
             android:name=".ui.adventure.AdventureActivity"

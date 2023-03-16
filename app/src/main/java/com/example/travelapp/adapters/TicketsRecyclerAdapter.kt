@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.travelapp.R
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Ticket
-import com.example.travelapp.ui.TicketActivity
+import com.example.travelapp.ui.tickets.TicketActivity
 import com.example.travelapp.ui.tickets.TicketsViewModel
 
 class TicketsRecyclerAdapter(private val viewModel: TicketsViewModel) : RecyclerView.Adapter<TicketsRecyclerAdapter.MyViewHolder>() {
@@ -56,6 +56,7 @@ class TicketsRecyclerAdapter(private val viewModel: TicketsViewModel) : Recycler
             putExtra("ticket_arrival_date", ticket.arrivalDate)
             putExtra("ticket_departure_date", ticket.departureDate)
             putExtra("ticket_airline", ticket.airline)
+            putExtra("ticket_id", ticket.id)
         }
         context.startActivity(intent)
     }

@@ -17,5 +17,7 @@ data class Ticket (
     @ColumnInfo(name = "arrivalDate")
     var arrivalDate: String,
     @ColumnInfo(name = "airline")
-    var airline: String
+    var airline: String,
+    @ColumnInfo(name = "qrLink")
+    var qrLink: String
 )
