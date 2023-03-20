@@ -1,5 +1,6 @@
 package com.example.travelapp.adapters
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +49,7 @@ class TicketsRecyclerAdapter(private val viewModel: TicketsViewModel) : Recycler
     }
 
     private fun openTicket(holder: MyViewHolder, ticket: Ticket) {
-        val context = holder.cLayoutTicket.context
+        val context = holder.cLayoutTicket.context as Activity
         val intent = Intent(context, TicketActivity::class.java)
         with (intent) {
             putExtra("ticket_city_from", ticket.cityFrom)
@@ -59,6 +60,7 @@ class TicketsRecyclerAdapter(private val viewModel: TicketsViewModel) : Recycler
             putExtra("ticket_id", ticket.id)
         }
         context.startActivity(intent)
+        context.finish()
     }
 
     private fun deleteTicket(ticket: Ticket, position: Int) {
