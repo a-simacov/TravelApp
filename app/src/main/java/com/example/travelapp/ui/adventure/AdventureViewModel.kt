@@ -21,7 +21,7 @@ class AdventureViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun delete(place: Places) { thread { repository.deletePlace(place) } }
 
-    fun deletePlaces() { thread { repository.deletePlaces() } }
+    fun clear() { thread { repository.deletePlaces() } }
 
     fun add(place: Places) { thread { repository.addPlace(place) } }
 

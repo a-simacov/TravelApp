@@ -62,7 +62,7 @@ class TicketsActivity : AppCompatActivity() {
     }
 
     private fun clearAllTickets(dialog: BottomSheetDialog, viewModel: TicketsViewModel) {
-        viewModel.deleteTickets()
+        viewModel.clear()
         dialog.dismiss()
     }
 

@@ -61,7 +61,7 @@ class AdventureActivity : AppCompatActivity() {
     }
 
     private fun clearAllPlaces(dialog: BottomSheetDialog, viewModel: AdventureViewModel) {
-        viewModel.deletePlaces()
+        viewModel.clear()
         dialog.dismiss()
     }
 

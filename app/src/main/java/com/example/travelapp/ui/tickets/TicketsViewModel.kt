@@ -3,7 +3,6 @@ package com.example.travelapp.ui.tickets
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import com.example.travelapp.db.*
 import kotlin.concurrent.thread
 
@@ -20,9 +19,10 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
 
     fun delete(ticket: Ticket) { thread { repository.deleteTicket(ticket) } }
 
-    fun deleteTickets() { thread { repository.deleteTickets() } }
+    fun clear() { thread { repository.deleteTickets() } }
 
     fun add(ticket: Ticket) { thread { repository.addTicket(ticket) } }
 
-    fun deleteTicketById(id: Int) { thread { repository.deleteTicketById(id) } }
+    fun deleteById(id: Int) { thread { repository.deleteTicketById(id) } }
+
 }
