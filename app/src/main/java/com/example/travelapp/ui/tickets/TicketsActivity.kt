@@ -25,6 +25,9 @@ class TicketsActivity : AppCompatActivity() {
         )
 
         val viewModel: TicketsViewModel = ViewModelProvider(this).get(TicketsViewModel::class.java)
+
+        // Подписываемся на изменения в tickets из viewModel
+        // При изменении tickets, он будет преобразован в MutableList и сообщит адаптеру об изменениях
         viewModel.tickets.observe(this) {
             val adapter = recyclerView.adapter as TicketsRecyclerAdapter
             adapter.tickets = it.toMutableList()

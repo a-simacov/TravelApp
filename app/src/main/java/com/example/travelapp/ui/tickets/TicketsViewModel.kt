@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import com.example.travelapp.db.*
 import kotlin.concurrent.thread
 
+// используется именно AndroidViewModel, т.к. она может принимать контекст
 class TicketsViewModel(application: Application) : AndroidViewModel(application) {
 
     var tickets: LiveData<List<Ticket>>
