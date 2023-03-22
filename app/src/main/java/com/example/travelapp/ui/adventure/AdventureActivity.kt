@@ -3,13 +3,14 @@ package com.example.travelapp.ui.adventure
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.travelapp.R
-import com.example.travelapp.adapters.CustomRecyclerAdapter
+import com.example.travelapp.adapters.AdventureRecyclerAdapter
+import com.example.travelapp.databinding.ActivityAdventureBinding
 import com.example.travelapp.db.Places
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -19,22 +20,28 @@ class AdventureActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adventure)
 
+        val binding = DataBindingUtil.setContentView<ActivityAdventureBinding>(this, R.layout.activity_adventure)
+
         val recyclerView = findViewById<RecyclerView>(R.id.placesRecycler)
         recyclerView.layoutManager = LinearLayoutManager(
             this, LinearLayoutManager.HORIZONTAL, false
         )
 
         val viewModel: AdventureViewModel = ViewModelProvider(this).get(AdventureViewModel::class.java)
+        binding.adventureModel = viewModel
+        binding.lifecycleOwner = this
+        binding.adventureModel!!.searchText.observe(this) { println(it) /*binding.adventureModel.searchText.value = "sss"*/ }
+
         // подписка на переменную places
         viewModel.places.observe(this) {
-            val adapter = recyclerView.adapter as CustomRecyclerAdapter
+            val adapter = recyclerView.adapter as AdventureRecyclerAdapter
             adapter.places = it.toMutableList()
             adapter.notifyDataSetChanged()
         }
 
-        recyclerView.adapter = CustomRecyclerAdapter(viewModel)
+        recyclerView.adapter = AdventureRecyclerAdapter(viewModel)
 
-        findViewById<ImageView>(R.id.imageViewAddPlace).setOnClickListener{ addPlaceOnCLick(viewModel) }
+        binding.imageViewAddPlace.setOnClickListener{ addPlaceOnCLick(viewModel) }
 
     }
 
@@ -50,14 +57,16 @@ class AdventureActivity : AppCompatActivity() {
     }
 
     private fun savePlace(dialog: BottomSheetDialog, viewModel: AdventureViewModel) {
-        val place = Places(
-            name = dialog.findViewById<TextView>(R.id.editTextName)?.text.toString(),
-            info = dialog.findViewById<TextView>(R.id.editTextInfo)?.text.toString(),
-            textDetail = dialog.findViewById<TextView>(R.id.editTextDetail)?.text.toString(),
-            imageUrl = ""
-        )
-        viewModel.add(place)
-        dialog.dismiss()
+        with (dialog) {
+            val place = Places(
+                name = findViewById<TextView>(R.id.editTextName)?.text.toString(),
+                info = findViewById<TextView>(R.id.editTextInfo)?.text.toString(),
+                textDetail = findViewById<TextView>(R.id.editTextDetail)?.text.toString(),
+                imageUrl = ""
+            )
+            viewModel.add(place)
+            dismiss()
+        }
     }
 
     private fun clearAllPlaces(dialog: BottomSheetDialog, viewModel: AdventureViewModel) {

@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.travelapp.R
+import com.example.travelapp.databinding.ActivityPlaceBinding
+import com.example.travelapp.databinding.ActivityTicketBinding
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
 import kotlin.concurrent.thread
@@ -18,30 +20,29 @@ class TicketActivity : AppCompatActivity() {
     }
 
     private fun fillTicketData(intent: Intent) {
-        val textCityFrom = findViewById<TextView>(R.id.textCityFrom)
-        val textCityTo2 = findViewById<TextView>(R.id.textCityTo2)
-        val textDepDate = findViewById<TextView>(R.id.textDepDate)
-        val textArrDate = findViewById<TextView>(R.id.textArrDate)
-        val textAirline2 = findViewById<TextView>(R.id.textAirline2)
+        val binding = ActivityTicketBinding.inflate(layoutInflater)
         var ticketId = 0
         with (intent) {
-            textCityFrom?.text = getStringExtra("ticket_city_from")
-            textCityTo2?.text = getStringExtra("ticket_city_to")
-            textDepDate?.text = getStringExtra("ticket_arrival_date")
-            textArrDate?.text = getStringExtra("ticket_departure_date")
-            textAirline2?.text = getStringExtra("ticket_airline")
+            binding.textCityFrom.text = getStringExtra("ticket_city_from")
+            binding.textCityTo2.text = getStringExtra("ticket_city_to")
+            binding.textDepDate.text = getStringExtra("ticket_arrival_date")
+            binding.textArrDate.text = getStringExtra("ticket_departure_date")
+            binding.textAirline2.text = getStringExtra("ticket_airline")
             ticketId = getIntExtra("ticket_id", 0)
         }
 
+        // Почему не подключается обработчик нажатия через binding?
+        //binding.imgRemoveTicket.setOnClickListener { deleteTicketListener(ticketId) }
+        findViewById<ImageView>(R.id.imgRemoveTicket).setOnClickListener { deleteTicketListener(ticketId) }
+    }
+
+    private fun deleteTicketListener(ticketId: Int) {
         val dao = Db.getDb(application).getDao()
         val repository = Repository(dao)
 
-        findViewById<ImageView>(R.id.imgRemoveTicket).setOnClickListener {
-            thread { repository.deleteTicketById(ticketId) }
-            startActivity(Intent(this, TicketsActivity::class.java))
-            finish()
-        }
-
+        thread { repository.deleteTicketById(ticketId) }
+        startActivity(Intent(this, TicketsActivity::class.java))
+        finish()
     }
 
 }

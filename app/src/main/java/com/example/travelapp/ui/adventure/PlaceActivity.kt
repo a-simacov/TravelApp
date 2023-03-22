@@ -3,8 +3,8 @@ package com.example.travelapp.ui.adventure
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import com.example.travelapp.R
+import com.example.travelapp.databinding.ActivityPlaceBinding
 
 class PlaceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,13 +14,11 @@ class PlaceActivity : AppCompatActivity() {
     }
 
     private fun fillPlaceData(intent: Intent) {
-        val textName = findViewById<TextView>(R.id.textName)
-        val textInfo = findViewById<TextView>(R.id.textInfo2)
-        val textDetail = findViewById<TextView>(R.id.textDetail)
+        val binding = ActivityPlaceBinding.inflate(layoutInflater)
         with (intent) {
-            textName?.text = getStringExtra("place_name")
-            textInfo?.text = getStringExtra("place_info")
-            textDetail?.text = getStringExtra("place_textDetail")
+            binding.textName.text = getStringExtra("place_name")
+            binding.textInfo2.text = getStringExtra("place_info")
+            binding.textDetail.text = getStringExtra("place_textDetail")
         }
     }
 }

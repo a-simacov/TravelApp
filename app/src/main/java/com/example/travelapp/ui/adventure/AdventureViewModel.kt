@@ -3,6 +3,7 @@ package com.example.travelapp.ui.adventure
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
 import com.example.travelapp.db.Repository
@@ -12,6 +13,7 @@ class AdventureViewModel(application: Application) : AndroidViewModel(applicatio
 
     var places: LiveData<List<Places>>
     private val repository: Repository
+    val searchText = MutableLiveData("")
 
     init {
         val dao = Db.getDb(application).getDao()
