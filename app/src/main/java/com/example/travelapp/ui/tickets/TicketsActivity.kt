@@ -3,7 +3,6 @@ package com.example.travelapp.ui.tickets
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.travelapp.R
 import com.example.travelapp.adapters.TicketsRecyclerAdapter
 import com.example.travelapp.databinding.ActivityTicketsBinding
-import com.example.travelapp.databinding.TicketItemBinding
 import com.example.travelapp.db.Ticket
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -20,7 +18,6 @@ class TicketsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tickets)
 
         val binding = DataBindingUtil.setContentView<ActivityTicketsBinding>(this, R.layout.activity_tickets)
 

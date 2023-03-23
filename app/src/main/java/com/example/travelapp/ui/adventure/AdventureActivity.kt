@@ -18,7 +18,6 @@ class AdventureActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_adventure)
 
         val binding = DataBindingUtil.setContentView<ActivityAdventureBinding>(this, R.layout.activity_adventure)
 

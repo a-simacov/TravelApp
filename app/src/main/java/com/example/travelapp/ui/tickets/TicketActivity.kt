@@ -3,24 +3,35 @@ package com.example.travelapp.ui.tickets
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
-import com.example.travelapp.R
-import com.example.travelapp.databinding.ActivityPlaceBinding
+import androidx.activity.OnBackPressedCallback
 import com.example.travelapp.databinding.ActivityTicketBinding
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
 import kotlin.concurrent.thread
 
 class TicketActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityTicketBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ticket)
+
+        binding = ActivityTicketBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         fillTicketData(intent)
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object: OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    openTicketsActivity()
+                }
+            }
+        )
     }
 
     private fun fillTicketData(intent: Intent) {
-        val binding = ActivityTicketBinding.inflate(layoutInflater)
         var ticketId = 0
         with (intent) {
             binding.textCityFrom.text = getStringExtra("ticket_city_from")
@@ -31,9 +42,7 @@ class TicketActivity : AppCompatActivity() {
             ticketId = getIntExtra("ticket_id", 0)
         }
 
-        // Почему не подключается обработчик нажатия через binding?
-        //binding.imgRemoveTicket.setOnClickListener { deleteTicketListener(ticketId) }
-        findViewById<ImageView>(R.id.imgRemoveTicket).setOnClickListener { deleteTicketListener(ticketId) }
+        binding.imgRemoveTicket.setOnClickListener { deleteTicketListener(ticketId) }
     }
 
     private fun deleteTicketListener(ticketId: Int) {
@@ -41,6 +50,10 @@ class TicketActivity : AppCompatActivity() {
         val repository = Repository(dao)
 
         thread { repository.deleteTicketById(ticketId) }
+        openTicketsActivity()
+    }
+
+    private fun openTicketsActivity() {
         startActivity(Intent(this, TicketsActivity::class.java))
         finish()
     }
