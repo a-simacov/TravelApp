@@ -43,14 +43,7 @@ class TicketsRecyclerAdapter(private val viewModel: TicketsViewModel) : Recycler
     private fun openTicket(binding: TicketItemBinding, ticket: Ticket) {
         val context = binding.cLayoutTicket.context as Activity
         val intent = Intent(context, TicketActivity::class.java)
-        with (intent) {
-            putExtra("ticket_city_from", ticket.cityFrom)
-            putExtra("ticket_city_to", ticket.cityTo)
-            putExtra("ticket_arrival_date", ticket.arrivalDate)
-            putExtra("ticket_departure_date", ticket.departureDate)
-            putExtra("ticket_airline", ticket.airline)
-            putExtra("ticket_id", ticket.id)
-        }
+        intent.putExtra("ticket_id", ticket.id)
         context.startActivity(intent)
         context.finish()
     }

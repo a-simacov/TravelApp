@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
+import androidx.databinding.DataBindingUtil
+import com.example.travelapp.R
 import com.example.travelapp.databinding.ActivityTicketBinding
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
@@ -11,13 +13,13 @@ import kotlin.concurrent.thread
 
 class TicketActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityTicketBinding
+    lateinit var databinding: ActivityTicketBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityTicketBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        databinding = DataBindingUtil.setContentView(this, R.layout.activity_ticket)
+        setContentView(databinding.root)
 
         fillTicketData(intent)
 
@@ -32,23 +34,19 @@ class TicketActivity : AppCompatActivity() {
     }
 
     private fun fillTicketData(intent: Intent) {
-        var ticketId = 0
-        with (intent) {
-            binding.textCityFrom.text = getStringExtra("ticket_city_from")
-            binding.textCityTo2.text = getStringExtra("ticket_city_to")
-            binding.textDepDate.text = getStringExtra("ticket_arrival_date")
-            binding.textArrDate.text = getStringExtra("ticket_departure_date")
-            binding.textAirline2.text = getStringExtra("ticket_airline")
-            ticketId = getIntExtra("ticket_id", 0)
-        }
+        val dao = Db.getDb(application).getDao()
+        val repository = Repository(dao)
 
-        binding.imgRemoveTicket.setOnClickListener { deleteTicketListener(ticketId) }
+        val ticketId = intent.getIntExtra("ticket_id", 0)
+
+        thread { databinding.ticket = repository.getTicket(ticketId) }
+
+        databinding.imgRemoveTicket.setOnClickListener { deleteTicketListener(ticketId) }
     }
 
     private fun deleteTicketListener(ticketId: Int) {
         val dao = Db.getDb(application).getDao()
         val repository = Repository(dao)
-
         thread { repository.deleteTicketById(ticketId) }
         openTicketsActivity()
     }

@@ -27,4 +27,7 @@ interface Dao {
 
     @Query("DELETE FROM tickets WHERE id = :id")
     fun deleteTicketById(id: Int)
+
+    @Query("SELECT * FROM tickets WHERE id = :id")
+    fun getTicket(id: Int): Ticket
 }

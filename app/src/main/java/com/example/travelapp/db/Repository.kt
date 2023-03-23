@@ -14,6 +14,8 @@ class Repository(private val dao: Dao) {
 
     fun addTicket(ticket: Ticket) { dao.insertTicket(ticket) }
 
+    fun getTicket(id: Int): Ticket { return dao.getTicket(id) }
+
     fun deleteTicket(ticket: Ticket) { dao.deleteTicket(ticket) }
 
     fun deleteTickets() { dao.deleteTickets() }
