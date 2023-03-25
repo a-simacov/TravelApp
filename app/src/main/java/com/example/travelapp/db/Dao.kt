@@ -9,6 +9,8 @@ import androidx.room.Query
 interface Dao {
     @Insert
     fun insertPlace(places: Places)
+    @Insert
+    fun insertPlaces(places: List<Places>)
     @Delete
     fun deletePlace(places: Places)
     @Query("SELECT * FROM places")
@@ -18,6 +20,8 @@ interface Dao {
 
     @Insert
     fun insertTicket(ticket: Ticket)
+    @Insert
+    fun insertTickets(tickets: List<Ticket>)
     @Delete
     fun deleteTicket(ticket: Ticket)
     @Query("SELECT * FROM tickets")

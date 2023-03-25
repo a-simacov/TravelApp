@@ -38,6 +38,8 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+
     apply plugin: 'kotlin-android'
     apply plugin: 'kotlin-kapt'
     kapt("androidx.room:room-compiler:2.5.0")
