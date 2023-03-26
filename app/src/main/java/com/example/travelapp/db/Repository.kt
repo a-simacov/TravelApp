@@ -10,6 +10,8 @@ class Repository(private val dao: Dao) {
 
     fun addPlaces(places: List<Places>) { dao.insertPlaces(places) }
 
+    fun getPlace(id: Int): Places { return dao.getPlace(id) }
+
     fun deletePlace(place: Places) { dao.deletePlace(place) }
 
     fun deletePlaces() { dao.deletePlaces() }

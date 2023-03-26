@@ -31,7 +31,7 @@ class AdventureRecyclerAdapter(private val viewModel: AdventureViewModel) : Recy
         val place: Places = places[position]
         with (holder.binding) {
             this.place = place
-            constraintLayout.setOnClickListener { openPlace(this, place) }
+            cLayoutPlace.setOnClickListener { openPlace(this, place) }
             btnDeletePlace.setOnClickListener { deletePlace(place, position) }
         }
     }
@@ -41,13 +41,9 @@ class AdventureRecyclerAdapter(private val viewModel: AdventureViewModel) : Recy
     }
 
     private fun openPlace(binding: PlaceItemBinding, place: Places) {
-        val context = binding.constraintLayout.context
+        val context = binding.cLayoutPlace.context
         val intent = Intent(context, PlaceActivity::class.java)
-        with (intent) {
-            putExtra("place_name", place.name)
-            putExtra("place_info", place.info)
-            putExtra("place_textDetail", place.textDetail)
-        }
+        intent.putExtra("place_id", place.id)
         context.startActivity(intent)
     }
 

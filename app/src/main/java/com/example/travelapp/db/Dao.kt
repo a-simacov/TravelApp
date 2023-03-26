@@ -34,4 +34,7 @@ interface Dao {
 
     @Query("SELECT * FROM tickets WHERE id = :id")
     fun getTicket(id: Int): Ticket
+
+    @Query("SELECT * FROM places WHERE id = :id")
+    fun getPlace(id: Int): Places
 }

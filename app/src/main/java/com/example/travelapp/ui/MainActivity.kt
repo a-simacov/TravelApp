@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
         val oneTimeRequest = OneTimeWorkRequestBuilder<LoadTickets>()
             .setInputData(data)
-            .setInitialDelay(5, TimeUnit.SECONDS)
+            .setInitialDelay(15, TimeUnit.SECONDS)
             .addTag("loadTicketsOneTime")
             .build()
         wm.enqueue(oneTimeRequest)
