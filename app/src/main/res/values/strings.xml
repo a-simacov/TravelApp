@@ -24,4 +24,9 @@
     <string name="see_all">See all</string>
     <string name="recommended">Recommended</string>
     <string name="save_your_tickets_here">Save your tickets here</string>
+    <string name="cityFrom">From %s</string>
+    <string name="cityTo">To %s</string>
+    <string name="arrivalDate">Arrival date: %s</string>
+    <string name="departureDate">Departure date: %s</string>
+    <string name="airline">Airline: %s</string>
 </resources>

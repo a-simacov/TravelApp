@@ -22,22 +22,24 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="27dp"
             android:fontFamily="@font/raleway_regular"
-            android:text="@{ticket.cityFrom}"
+            android:text="@{@string/cityFrom(ticket.cityFrom)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="From Saint Petersburg" />
 
         <TextView
             android:id="@+id/textCityTo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/raleway_semibold"
-            android:text="@{ticket.cityTo}"
+            android:text="@{@string/cityTo(ticket.cityTo)}"
             android:textColor="@color/black"
             android:textSize="34sp"
             app:layout_constraintStart_toStartOf="@+id/textCityFrom"
-            app:layout_constraintTop_toBottomOf="@+id/textCityFrom" />
+            app:layout_constraintTop_toBottomOf="@+id/textCityFrom"
+            tools:text="To Moscow" />
 
         <TextView
             android:id="@+id/textDepDate"
@@ -47,12 +49,13 @@
             android:layout_marginTop="47dp"
             android:layout_marginEnd="24dp"
             android:fontFamily="@font/raleway_regular"
-            android:text="@{ticket.departureDate}"
+            android:text="@{@string/departureDate(ticket.departureDate)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textCityTo2" />
+            app:layout_constraintTop_toBottomOf="@+id/textCityTo2"
+            tools:text="Departure date: 25-12-2023" />
 
         <TextView
             android:id="@+id/textArrDate"
@@ -61,12 +64,13 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:fontFamily="@font/raleway_regular"
-            android:text="@{ticket.arrivalDate}"
+            android:text="@{@string/arrivalDate(ticket.arrivalDate)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textDepDate" />
+            app:layout_constraintTop_toBottomOf="@+id/textDepDate"
+            tools:text="Arrival date: 25-12-2023" />
 
         <ImageView
             android:id="@+id/imgRemoveTicket"
@@ -86,12 +90,13 @@
             android:layout_marginEnd="108dp"
             android:layout_marginBottom="52dp"
             android:fontFamily="@font/raleway_semibold"
-            android:text="@{ticket.airline}"
+            android:text="@{@string/airline(ticket.airline)}"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="34sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Airline: S7" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
