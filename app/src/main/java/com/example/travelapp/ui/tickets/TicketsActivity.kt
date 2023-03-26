@@ -2,34 +2,34 @@ package com.example.travelapp.ui.tickets
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.travelapp.R
 import com.example.travelapp.adapters.TicketsRecyclerAdapter
 import com.example.travelapp.databinding.ActivityTicketsBinding
+import com.example.travelapp.databinding.TicketDialogBinding
 import com.example.travelapp.db.Ticket
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class TicketsActivity : AppCompatActivity() {
+    lateinit var viewModel: TicketsViewModel
+    lateinit var dataBinding: ActivityTicketsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.setContentView<ActivityTicketsBinding>(this, R.layout.activity_tickets)
+        dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_tickets)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.ticketsRecycler)
+        val recyclerView = dataBinding.ticketsRecycler
         recyclerView.layoutManager = LinearLayoutManager(
             this, LinearLayoutManager.HORIZONTAL, false
         )
 
-        val viewModel: TicketsViewModel = ViewModelProvider(this).get(TicketsViewModel::class.java)
-        binding.ticketModel = viewModel
-        binding.lifecycleOwner = this
-        binding.ticketModel!!.searchText.observe(this) { println(it) }
+        viewModel = ViewModelProvider(this).get(TicketsViewModel::class.java)
+        dataBinding.ticketModel = viewModel
+        dataBinding.lifecycleOwner = this
+        dataBinding.ticketModel!!.searchText.observe(this) { println(it) }
 
         // Подписываемся на изменения в tickets из viewModel
         // При изменении tickets, он будет преобразован в MutableList и сообщит адаптеру об изменениях
@@ -41,39 +41,43 @@ class TicketsActivity : AppCompatActivity() {
 
         recyclerView.adapter = TicketsRecyclerAdapter(viewModel)
 
-        binding.imageViewAddTicket.setOnClickListener{ addTicketOnCLick(viewModel) }
-
+        dataBinding.imageViewAddTicket.setOnClickListener{ addTicketOnCLick() }
     }
 
-    private fun addTicketOnCLick(viewModel: TicketsViewModel) {
+    private fun addTicketOnCLick() {
         val dialog = BottomSheetDialog(this)
-        with (dialog) {
-            setContentView(R.layout.ticket_dialog)
-            findViewById<Button>(R.id.btnTicketCancel)?.setOnClickListener { this.dismiss() }
-            findViewById<Button>(R.id.btnTicketsDelete)?.setOnClickListener { clearAllTickets(this, viewModel) }
-            findViewById<Button>(R.id.btnTicketsAdd)?.setOnClickListener { saveTicket(this, viewModel) }
-            show()
+        val dialogBinding = TicketDialogBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        setDialogListeners(dialog, dialogBinding)
+        dialog.show()
+    }
+
+    private fun setDialogListeners(dialog: BottomSheetDialog, dialogBinding: TicketDialogBinding) {
+        with (dialogBinding) {
+            btnTicketCancel.setOnClickListener { dialog.dismiss() }
+            btnTicketsDelete.setOnClickListener {
+                viewModel.clear()
+                dialog.dismiss()
+            }
+            btnTicketsAdd.setOnClickListener {
+                val newTicket = newTicket(this)
+                viewModel.add(newTicket)
+                dialog.dismiss()
+            }
         }
     }
 
-    private fun saveTicket(dialog: BottomSheetDialog, viewModel: TicketsViewModel) {
-        with (dialog) {
-            val ticket = Ticket(
-                cityFrom = findViewById<TextView>(R.id.editTextCityFrom)?.text.toString(),
-                departureDate = findViewById<TextView>(R.id.editTextDepartureDate)?.text.toString(),
-                cityTo = findViewById<TextView>(R.id.editTextCityTo)?.text.toString(),
-                arrivalDate = findViewById<TextView>(R.id.editTextArrivalDate)?.text.toString(),
-                airline = findViewById<TextView>(R.id.editTextAirline)?.text.toString(),
+    private fun newTicket(dialogBinding: TicketDialogBinding): Ticket {
+        return with (dialogBinding) {
+            Ticket(
+                cityFrom = editTextCityFrom.text.toString(),
+                departureDate = editTextDepartureDate.text.toString(),
+                cityTo = editTextCityTo.text.toString(),
+                arrivalDate = editTextArrivalDate.text.toString(),
+                airline = editTextAirline.text.toString(),
                 qrLink = ""
             )
-            viewModel.add(ticket)
-            dismiss()
         }
-    }
-
-    private fun clearAllTickets(dialog: BottomSheetDialog, viewModel: TicketsViewModel) {
-        viewModel.clear()
-        dialog.dismiss()
     }
 
 }

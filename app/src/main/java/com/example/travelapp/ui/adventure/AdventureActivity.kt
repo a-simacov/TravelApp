@@ -2,11 +2,9 @@ package com.example.travelapp.ui.adventure
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.travelapp.R
 import com.example.travelapp.adapters.AdventureRecyclerAdapter
 import com.example.travelapp.databinding.ActivityAdventureBinding
@@ -15,21 +13,23 @@ import com.example.travelapp.db.Places
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AdventureActivity : AppCompatActivity() {
+    lateinit var viewModel: AdventureViewModel
+    lateinit var dataBinding: ActivityAdventureBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.setContentView<ActivityAdventureBinding>(this, R.layout.activity_adventure)
+        dataBinding = DataBindingUtil.setContentView<ActivityAdventureBinding>(this, R.layout.activity_adventure)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.placesRecycler)
+        val recyclerView = dataBinding.placesRecycler
         recyclerView.layoutManager = LinearLayoutManager(
             this, LinearLayoutManager.HORIZONTAL, false
         )
 
-        val viewModel: AdventureViewModel = ViewModelProvider(this).get(AdventureViewModel::class.java)
-        binding.adventureModel = viewModel
-        binding.lifecycleOwner = this
-        binding.adventureModel!!.searchText.observe(this) { println(it) /*binding.adventureModel.searchText.value = "sss"*/ }
+        viewModel = ViewModelProvider(this).get(AdventureViewModel::class.java)
+        dataBinding.adventureModel = viewModel
+        dataBinding.lifecycleOwner = this
+        dataBinding.adventureModel!!.searchText.observe(this) { println(it) /*binding.adventureModel.searchText.value = "sss"*/ }
 
         // подписка на переменную places
         viewModel.places.observe(this) {
@@ -40,38 +40,40 @@ class AdventureActivity : AppCompatActivity() {
 
         recyclerView.adapter = AdventureRecyclerAdapter(viewModel)
 
-        binding.imageViewAddPlace.setOnClickListener{ addPlaceOnCLick(viewModel) }
-
+        dataBinding.imageViewAddPlace.setOnClickListener{ addPlaceOnCLick() }
     }
 
-    private fun addPlaceOnCLick(viewModel: AdventureViewModel) {
+    private fun addPlaceOnCLick() {
         val dialog = BottomSheetDialog(this)
         val dialogBinding = PlacesDialogBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
+        setDialogListeners(dialog, dialogBinding)
+        dialog.show()
+    }
+
+    private fun setDialogListeners(dialog: BottomSheetDialog, dialogBinding: PlacesDialogBinding) {
         with (dialogBinding) {
             btnCancel.setOnClickListener { dialog.dismiss() }
-            btnDelete.setOnClickListener { clearAllPlaces(dialog, viewModel) }
-            btnAdd.setOnClickListener { savePlace(dialog, viewModel) }
-            dialog.show()
+            btnDelete.setOnClickListener {
+                viewModel.clear()
+                dialog.dismiss()
+            }
+            btnAdd.setOnClickListener {
+                val newPlace = newPlace(this)
+                viewModel.add(newPlace)
+                dialog.dismiss()
+            }
         }
     }
 
-    private fun savePlace(dialog: BottomSheetDialog, viewModel: AdventureViewModel) {
-        with (dialog) {
-            val place = Places(
-                name = findViewById<TextView>(R.id.editTextName)?.text.toString(),
-                info = findViewById<TextView>(R.id.editTextInfo)?.text.toString(),
-                textDetail = findViewById<TextView>(R.id.editTextDetail)?.text.toString(),
+    private fun newPlace(dialogBinding: PlacesDialogBinding): Places {
+        return with (dialogBinding) {
+            Places(
+                name = editTextName.text.toString(),
+                info = editTextInfo.text.toString(),
+                textDetail = editTextDetail.text.toString(),
                 imageUrl = ""
             )
-            viewModel.add(place)
-            dismiss()
         }
     }
-
-    private fun clearAllPlaces(dialog: BottomSheetDialog, viewModel: AdventureViewModel) {
-        viewModel.clear()
-        dialog.dismiss()
-    }
-
 }
