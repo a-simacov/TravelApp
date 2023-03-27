@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadTickets() {
         loadTicketsOneTime()
-        loadTicketsPeriodic()
+        //loadTicketsPeriodic()
     }
 
     private fun loadTicketsOneTime() {
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
         val oneTimeRequest = OneTimeWorkRequestBuilder<LoadTickets>()
             .setInputData(data)
-            .setInitialDelay(15, TimeUnit.SECONDS)
+            .setInitialDelay(10, TimeUnit.SECONDS)
             .addTag("loadTicketsOneTime")
             .build()
         wm.enqueue(oneTimeRequest)
@@ -114,22 +114,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkStateById(id: UUID) {
         wm.getWorkInfoByIdLiveData(id).observe(this) {
-            Log.i("workState", "Work state $id: ${it.state}")
+            Log.i("workState", "Work state by id $id: ${it.state}")
         }
     }
 
     private fun checkStateByTag(tag: String) {
-        wm.getWorkInfosByTagLiveData(tag).observe(this) {
-            it.forEach {
-                Log.i("workState", "Work state tag: $tag ${it.id}: ${it.state}")
+        wm.getWorkInfosByTagLiveData(tag).observe(this) { workInfos ->
+            workInfos.forEach {
+                Log.i("workState", "Work state by tag: $tag ${it.id}: ${it.state}")
             }
         }
     }
 
     private fun checkStateByName(name: String) {
-        wm.getWorkInfosForUniqueWorkLiveData(name).observe(this) {
-            it.forEach {
-                Log.i("workState", "Work state name: $name ${it.id}: ${it.state}")
+        wm.getWorkInfosForUniqueWorkLiveData(name).observe(this) { workInfos ->
+            workInfos.forEach {
+                Log.i("workState", "Work state by name: $name ${it.id}: ${it.state}")
             }
         }
     }

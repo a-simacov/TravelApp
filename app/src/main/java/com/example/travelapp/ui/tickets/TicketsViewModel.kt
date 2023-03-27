@@ -10,14 +10,14 @@ import kotlin.concurrent.thread
 // используется именно AndroidViewModel, т.к. она может принимать контекст
 class TicketsViewModel(application: Application) : AndroidViewModel(application) {
 
-    var tickets: LiveData<List<Ticket>>
+    lateinit var tickets: MutableLiveData<List<Ticket>>
     private val repository: Repository
     val searchText = MutableLiveData("")
 
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        tickets = repository.tickets
+        tickets.value = repository.tickets
     }
 
     fun delete(ticket: Ticket) { thread { repository.deleteTicket(ticket) } }

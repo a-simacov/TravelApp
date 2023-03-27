@@ -1,10 +1,16 @@
 package com.example.travelapp.db
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlin.concurrent.thread
 
 class Repository(private val dao: Dao) {
     val places: LiveData<List<Places>> = dao.getAllPlaces()
-    val tickets: LiveData<List<Ticket>> = dao.getAllTickets()
+    var tickets = listOf<Ticket>()
+
+    init {
+        thread { tickets = dao.getAllTickets() }
+    }
 
     fun addPlace(place: Places) { dao.insertPlace(place) }
 
@@ -27,4 +33,6 @@ class Repository(private val dao: Dao) {
     fun deleteTickets() { dao.deleteTickets() }
 
     fun deleteTicketById(id: Int) { dao.deleteTicketById(id) }
+
+    fun getAllTickets(): List<Ticket> { return dao.getAllTickets() }
 }

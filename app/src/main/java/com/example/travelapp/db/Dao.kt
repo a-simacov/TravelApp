@@ -1,6 +1,7 @@
 package com.example.travelapp.db
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
@@ -25,7 +26,7 @@ interface Dao {
     @Delete
     fun deleteTicket(ticket: Ticket)
     @Query("SELECT * FROM tickets")
-    fun getAllTickets(): LiveData<List<Ticket>>
+    fun getAllTickets(): List<Ticket>
     @Query("DELETE FROM tickets")
     fun deleteTickets()
 
