@@ -1,11 +1,16 @@
 package com.example.travelapp.ui
 
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.example.travelapp.databinding.ActivityMainBinding
+import com.example.travelapp.receivers.BCReceiverAdventuresUploaded
+import com.example.travelapp.receivers.BCReceiverBluetooth
+import com.example.travelapp.receivers.BCReceiverTicketsUploaded
 import com.example.travelapp.workers.LoadAdventures
 import com.example.travelapp.workers.LoadTickets
 import java.util.UUID
@@ -24,6 +29,28 @@ class MainActivity : AppCompatActivity() {
 
         initOnClickListeners()
         loadData()
+
+        registerBCReceivers()
+    }
+
+    private fun registerBCReceivers() {
+        registerReceiver(
+            BCReceiverBluetooth(),
+            IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"),
+            android.Manifest.permission.BLUETOOTH,
+            null
+        )
+
+        LocalBroadcastManager.getInstance(this).also { bcManager ->
+            bcManager.registerReceiver(
+                BCReceiverAdventuresUploaded(),
+                IntentFilter("com.example.travelapp.uploadedNewAdventures")
+            )
+            bcManager.registerReceiver(
+                BCReceiverTicketsUploaded(),
+                IntentFilter("com.example.travelapp.uploadedNewTickets")
+            )
+        }
     }
 
     private fun initOnClickListeners() {
@@ -84,7 +111,7 @@ class MainActivity : AppCompatActivity() {
 
         val oneTimeRequest = OneTimeWorkRequestBuilder<LoadTickets>()
             .setInputData(data)
-            .setInitialDelay(15, TimeUnit.SECONDS)
+            .setInitialDelay(10, TimeUnit.SECONDS)
             .addTag("loadTicketsOneTime")
             .build()
         wm.enqueue(oneTimeRequest)

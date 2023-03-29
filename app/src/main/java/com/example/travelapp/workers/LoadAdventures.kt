@@ -6,8 +6,12 @@ import androidx.work.WorkerParameters
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
 import com.example.travelapp.db.Repository
+import com.example.travelapp.tools.sendLocalBroadcastInfo
 
-class LoadAdventures(context: Context, workingParameters: WorkerParameters) : Worker(context, workingParameters) {
+class LoadAdventures(val context: Context, workingParameters: WorkerParameters) : Worker(context, workingParameters) {
+
+    private val successAction = "com.example.travelapp.uploadedNewAdventures"
+
     override fun doWork(): Result {
         val dao = Db.getDb(applicationContext).getDao()
         val repository = Repository(dao)
@@ -18,6 +22,10 @@ class LoadAdventures(context: Context, workingParameters: WorkerParameters) : Wo
                 Places(null, "place 2", "info 2", "", "detail 2")
             )
         )
+
+        sendLocalBroadcastInfo(context, successAction, "Uploaded new adventures.")
+
         return Result.success()
     }
+
 }

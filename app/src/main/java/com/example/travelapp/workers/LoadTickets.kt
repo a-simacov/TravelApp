@@ -6,9 +6,13 @@ import androidx.work.WorkerParameters
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
 import com.example.travelapp.db.Ticket
+import com.example.travelapp.tools.sendLocalBroadcastInfo
 import kotlin.random.Random
 
-class LoadTickets(context: Context, workingParameters: WorkerParameters) : Worker(context, workingParameters) {
+class LoadTickets(val context: Context, workingParameters: WorkerParameters) : Worker(context, workingParameters) {
+
+    private val successAction = "com.example.travelapp.uploadedNewTickets"
+
     override fun doWork(): Result {
         val dao = Db.getDb(applicationContext).getDao()
         val repository = Repository(dao)
@@ -20,6 +24,9 @@ class LoadTickets(context: Context, workingParameters: WorkerParameters) : Worke
         repository.addTickets(
             demoTickets(cityFrom, cityTo)
         )
+
+        sendLocalBroadcastInfo(context, successAction, "Uploaded new tickets.")
+
         return Result.success()
     }
 
@@ -31,4 +38,5 @@ class LoadTickets(context: Context, workingParameters: WorkerParameters) : Worke
             Ticket(null, cityFrom, cityTo, date, date, airline, "")
         }
     }
+
 }
