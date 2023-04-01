@@ -126,7 +126,7 @@
             android:paddingStart="31dp"
             android:textColorHint="#AED5D2"
             android:textSize="20sp"
-            android:text="@{ticketModel.searchText}"
+            android:text="@={ticketModel.searchText}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lets_flight" />
