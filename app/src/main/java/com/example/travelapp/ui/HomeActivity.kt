@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.travelapp.databinding.ActivityHomeBinding
+import com.example.travelapp.tools.FlightsCountUpdater
 import com.example.travelapp.ui.adventure.AdventureActivity
 import com.example.travelapp.ui.tickets.TicketsActivity
 
@@ -18,6 +19,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initOnClickListeners()
+        FlightsCountUpdater(this).start(binding.tvFlightsCountHome)
     }
 
     private fun initOnClickListeners() {

@@ -36,7 +36,7 @@
                 app:srcCompat="@drawable/acc_info_tickets" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvUserNameTickets"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -59,6 +59,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/menu_maybe" />
+
+            <TextView
+                android:id="@+id/tvFlightsCountTickets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/raleway_regular"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageViewAddTicket"
+                app:layout_constraintStart_toEndOf="@+id/tvUserNameTickets"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="12 flights" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,7 +110,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
-            android:id="@+id/editTextSearch"
+            android:id="@+id/etSearchTickets"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -128,7 +140,7 @@
             android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextSearch">
+            app:layout_constraintTop_toBottomOf="@+id/etSearchTickets">
 
             <TextView
                 android:id="@+id/textView7"
@@ -179,14 +191,14 @@
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/btnSearchTickets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="31dp"
             android:background="@null"
-            app:layout_constraintBottom_toBottomOf="@+id/editTextSearch"
-            app:layout_constraintEnd_toEndOf="@+id/editTextSearch"
-            app:layout_constraintTop_toTopOf="@+id/editTextSearch"
+            app:layout_constraintBottom_toBottomOf="@+id/etSearchTickets"
+            app:layout_constraintEnd_toEndOf="@+id/etSearchTickets"
+            app:layout_constraintTop_toTopOf="@+id/etSearchTickets"
             app:srcCompat="@drawable/search_icon" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

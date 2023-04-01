@@ -10,6 +10,8 @@ import com.example.travelapp.adapters.TicketsRecyclerAdapter
 import com.example.travelapp.databinding.ActivityTicketsBinding
 import com.example.travelapp.databinding.TicketDialogBinding
 import com.example.travelapp.db.Ticket
+import com.example.travelapp.tools.FlightsCountUpdater
+import com.example.travelapp.tools.openSearch
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class TicketsActivity : AppCompatActivity() {
@@ -42,6 +44,11 @@ class TicketsActivity : AppCompatActivity() {
         recyclerView.adapter = TicketsRecyclerAdapter(viewModel)
 
         dataBinding.imageViewAddTicket.setOnClickListener{ addTicketOnCLick() }
+        dataBinding.btnSearchTickets.setOnClickListener {
+            openSearch(this, viewModel.searchText.value)
+        }
+
+        FlightsCountUpdater(this).start(dataBinding.tvFlightsCountTickets)
     }
 
     private fun addTicketOnCLick() {

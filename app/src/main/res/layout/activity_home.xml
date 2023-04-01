@@ -8,7 +8,7 @@
     tools:context=".ui.HomeActivity">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tvUserNameHome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -25,12 +25,14 @@
         android:id="@+id/imageView"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:layout_marginStart="99dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
         android:contentDescription="@string/logo_home"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvUserNameHome"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/acc_info" />
+        app:srcCompat="@drawable/acc_info" />
 
     <TextView
         android:id="@+id/textView4"
@@ -44,7 +46,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/tvUserNameHome" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -222,5 +224,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvFlightsCountHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/raleway_regular"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        tools:text="12 flights" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

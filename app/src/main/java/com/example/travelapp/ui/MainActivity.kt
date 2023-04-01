@@ -9,6 +9,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.example.travelapp.databinding.ActivityMainBinding
 import com.example.travelapp.receivers.BCReceiverAdventuresUploaded
+import com.example.travelapp.receivers.BCReceiverAirplane
 import com.example.travelapp.receivers.BCReceiverBluetooth
 import com.example.travelapp.receivers.BCReceiverTicketsUploaded
 import com.example.travelapp.workers.LoadAdventures
@@ -39,6 +40,11 @@ class MainActivity : AppCompatActivity() {
             IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"),
             android.Manifest.permission.BLUETOOTH,
             null
+        )
+
+        registerReceiver(
+            BCReceiverAirplane(),
+            IntentFilter("android.intent.action.AIRPLANE_MODE")
         )
 
         LocalBroadcastManager.getInstance(this).also { bcManager ->

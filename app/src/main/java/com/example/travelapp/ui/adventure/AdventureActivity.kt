@@ -10,6 +10,8 @@ import com.example.travelapp.adapters.AdventureRecyclerAdapter
 import com.example.travelapp.databinding.ActivityAdventureBinding
 import com.example.travelapp.databinding.PlacesDialogBinding
 import com.example.travelapp.db.Places
+import com.example.travelapp.tools.FlightsCountUpdater
+import com.example.travelapp.tools.openSearch
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AdventureActivity : AppCompatActivity() {
@@ -19,7 +21,7 @@ class AdventureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        dataBinding = DataBindingUtil.setContentView<ActivityAdventureBinding>(this, R.layout.activity_adventure)
+        dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_adventure)
 
         val recyclerView = dataBinding.placesRecycler
         recyclerView.layoutManager = LinearLayoutManager(
@@ -29,7 +31,7 @@ class AdventureActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(AdventureViewModel::class.java)
         dataBinding.adventureModel = viewModel
         dataBinding.lifecycleOwner = this
-        dataBinding.adventureModel!!.searchText.observe(this) { println(it) /*binding.adventureModel.searchText.value = "sss"*/ }
+        dataBinding.adventureModel!!.searchText.observe(this) { println(it) }
 
         // подписка на переменную places
         viewModel.places.observe(this) {
@@ -41,6 +43,11 @@ class AdventureActivity : AppCompatActivity() {
         recyclerView.adapter = AdventureRecyclerAdapter(viewModel)
 
         dataBinding.imageViewAddPlace.setOnClickListener{ addPlaceOnCLick() }
+        dataBinding.btnSearchAdventure.setOnClickListener {
+            openSearch(this, viewModel.searchText.value)
+        }
+
+        FlightsCountUpdater(this).start(dataBinding.tvFlightsCountAdv)
     }
 
     private fun addPlaceOnCLick() {
