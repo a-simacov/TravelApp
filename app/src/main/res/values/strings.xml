@@ -29,4 +29,5 @@
     <string name="arrivalDate">Arrival date: %s</string>
     <string name="departureDate">Departure date: %s</string>
     <string name="airline">Airline: %s</string>
+    <string name="txtFlightsCount">%s flights</string>
 </resources>

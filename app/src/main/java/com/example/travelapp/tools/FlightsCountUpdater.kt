@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.travelapp.R
 import com.example.travelapp.receivers.BCReceiverFlightsCount
 
 class FlightsCountUpdater(val context: Context) {
@@ -25,7 +26,7 @@ class FlightsCountUpdater(val context: Context) {
     fun start(textView: TextView) {
         receiverFlightsCount.flightsCount.observe(context as LifecycleOwner) {
             val flighstCount = if (it == 0) prefs.getInt("flights_count", 0) else it
-            textView.text = "$flighstCount flights"
+            textView.text = context.getString(R.string.txtFlightsCount, flighstCount.toString())
         }
     }
 

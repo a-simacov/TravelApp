@@ -24,7 +24,7 @@ class BCReceiverAirplane : BroadcastReceiver() {
     private fun notifyFlightsCountUpdated(context: Context, count: Int) {
         Intent().also { intent ->
             intent.action = "com.example.travelapp.flightsCountUpdated"
-            intent.putExtra("flights_count", count + 1)
+            intent.putExtra("flights_count", count)
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
         }
     }
