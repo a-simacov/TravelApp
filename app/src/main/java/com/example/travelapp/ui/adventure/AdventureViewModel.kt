@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
 import com.example.travelapp.db.Repository
-import kotlin.concurrent.thread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AdventureViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,10 +23,22 @@ class AdventureViewModel(application: Application) : AndroidViewModel(applicatio
         places = repository.places
     }
 
-    fun delete(place: Places) { thread { repository.deletePlace(place) } }
+    fun delete(place: Places) {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            repository.deletePlace(place)
+        }
+    }
 
-    fun clear() { thread { repository.deletePlaces() } }
+    fun clear() {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            repository.deletePlaces()
+        }
+    }
 
-    fun add(place: Places) { thread { repository.addPlace(place) } }
+    fun add(place: Places) {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            repository.addPlace(place)
+        }
+    }
 
 }

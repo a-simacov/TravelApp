@@ -9,7 +9,9 @@ import com.example.travelapp.R
 import com.example.travelapp.databinding.ActivityTicketBinding
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
-import kotlin.concurrent.thread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TicketActivity : AppCompatActivity() {
 
@@ -39,7 +41,9 @@ class TicketActivity : AppCompatActivity() {
 
         val ticketId = intent.getIntExtra("ticket_id", 0)
 
-        thread { databinding.ticket = repository.getTicket(ticketId) }
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            databinding.ticket = repository.getTicket(ticketId)
+        }
 
         databinding.imgRemoveTicket.setOnClickListener { deleteTicketListener(ticketId) }
     }
@@ -47,7 +51,9 @@ class TicketActivity : AppCompatActivity() {
     private fun deleteTicketListener(ticketId: Int) {
         val dao = Db.getDb(application).getDao()
         val repository = Repository(dao)
-        thread { repository.deleteTicketById(ticketId) }
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            repository.deleteTicketById(ticketId)
+        }
         openTicketsActivity()
     }
 

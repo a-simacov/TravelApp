@@ -5,7 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.travelapp.db.*
-import kotlin.concurrent.thread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // используется именно AndroidViewModel, т.к. она может принимать контекст
 class TicketsViewModel(application: Application) : AndroidViewModel(application) {
@@ -20,12 +22,28 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
         tickets = repository.tickets
     }
 
-    fun delete(ticket: Ticket) { thread { repository.deleteTicket(ticket) } }
+    fun delete(ticket: Ticket) {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            repository.deleteTicket(ticket)
+        }
+    }
 
-    fun clear() { thread { repository.deleteTickets() } }
+    fun clear() {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            repository.deleteTickets()
+        }
+    }
 
-    fun add(ticket: Ticket) { thread { repository.addTicket(ticket) } }
+    fun add(ticket: Ticket) {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+        repository.addTicket(ticket)
+        }
+    }
 
-    fun deleteById(id: Int) { thread { repository.deleteTicketById(id) } }
+    fun deleteById(id: Int) {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            repository.deleteTicketById(id)
+        }
+    }
 
 }

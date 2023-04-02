@@ -8,7 +8,9 @@ import com.example.travelapp.R
 import com.example.travelapp.databinding.ActivityPlaceBinding
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
-import kotlin.concurrent.thread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PlaceActivity : AppCompatActivity() {
 
@@ -29,6 +31,8 @@ class PlaceActivity : AppCompatActivity() {
 
         val placeId = intent.getIntExtra("place_id", 0)
 
-        thread { dataBinding.place = repository.getPlace(placeId) }
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            dataBinding.place = repository.getPlace(placeId)
+        }
     }
 }

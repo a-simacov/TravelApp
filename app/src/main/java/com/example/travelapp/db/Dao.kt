@@ -8,33 +8,33 @@ import androidx.room.Query
 @androidx.room.Dao
 interface Dao {
     @Insert
-    fun insertPlace(places: Places)
+    suspend fun insertPlace(places: Places)
     @Insert
-    fun insertPlaces(places: List<Places>)
+    suspend fun insertPlaces(places: List<Places>)
     @Delete
-    fun deletePlace(places: Places)
+    suspend fun deletePlace(places: Places)
     @Query("SELECT * FROM places")
     fun getAllPlaces(): LiveData<List<Places>>
     @Query("DELETE FROM places")
-    fun deletePlaces()
+    suspend fun deletePlaces()
 
     @Insert
-    fun insertTicket(ticket: Ticket)
+    suspend fun insertTicket(ticket: Ticket)
     @Insert
-    fun insertTickets(tickets: List<Ticket>)
+    suspend fun insertTickets(tickets: List<Ticket>)
     @Delete
-    fun deleteTicket(ticket: Ticket)
+    suspend fun deleteTicket(ticket: Ticket)
     @Query("SELECT * FROM tickets")
     fun getAllTickets(): LiveData<List<Ticket>>
     @Query("DELETE FROM tickets")
-    fun deleteTickets()
+    suspend fun deleteTickets()
 
     @Query("DELETE FROM tickets WHERE id = :id")
-    fun deleteTicketById(id: Int)
+    suspend fun deleteTicketById(id: Int)
 
     @Query("SELECT * FROM tickets WHERE id = :id")
-    fun getTicket(id: Int): Ticket
+    suspend fun getTicket(id: Int): Ticket
 
     @Query("SELECT * FROM places WHERE id = :id")
-    fun getPlace(id: Int): Places
+    suspend fun getPlace(id: Int): Places
 }
