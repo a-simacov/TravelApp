@@ -12,6 +12,7 @@ import com.example.travelapp.receivers.BCReceiverAdventuresUploaded
 import com.example.travelapp.receivers.BCReceiverAirplane
 import com.example.travelapp.receivers.BCReceiverBluetooth
 import com.example.travelapp.receivers.BCReceiverTicketsUploaded
+import com.example.travelapp.tools.Constants
 import com.example.travelapp.workers.LoadAdventures
 import com.example.travelapp.workers.LoadTickets
 import java.util.UUID
@@ -37,24 +38,24 @@ class MainActivity : AppCompatActivity() {
     private fun registerBCReceivers() {
         registerReceiver(
             BCReceiverBluetooth(),
-            IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"),
+            IntentFilter(Constants.ACTION_BT_STATE_CHANGED),
             android.Manifest.permission.BLUETOOTH,
             null
         )
 
         registerReceiver(
             BCReceiverAirplane(),
-            IntentFilter("android.intent.action.AIRPLANE_MODE")
+            IntentFilter(Constants.ACTION_AIRPLANE_MODE)
         )
 
         LocalBroadcastManager.getInstance(this).also { bcManager ->
             bcManager.registerReceiver(
                 BCReceiverAdventuresUploaded(),
-                IntentFilter("com.example.travelapp.uploadedNewAdventures")
+                IntentFilter(Constants.LACTION_ADV_UPLOADED)
             )
             bcManager.registerReceiver(
                 BCReceiverTicketsUploaded(),
-                IntentFilter("com.example.travelapp.uploadedNewTickets")
+                IntentFilter(Constants.LACTION_TICKETS_UPLOADED)
             )
         }
     }

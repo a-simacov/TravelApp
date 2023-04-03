@@ -1,21 +1,23 @@
 package com.example.travelapp.receivers
 
-import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.travelapp.tools.Constants
 
 class BCReceiverAirplane : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val state = intent.getBooleanExtra("state", false)
         if (!state) {
-            val prefs = context.applicationContext.getSharedPreferences("travel_data", AppCompatActivity.MODE_PRIVATE)
+            val prefs = context.applicationContext.getSharedPreferences(
+                Constants.PREFS_FILE_NAME,
+                AppCompatActivity.MODE_PRIVATE
+            )
             prefs.also {
-                val count = it.getInt("flights_count", 0) + 1
-                it.edit().putInt("flights_count", count).apply()
+                val count = it.getInt(Constants.FLIGHTS_COUNT_KEY, 0) + 1
+                it.edit().putInt(Constants.FLIGHTS_COUNT_KEY, count).apply()
                 notifyFlightsCountUpdated(context, count)
             }
         }
@@ -23,8 +25,8 @@ class BCReceiverAirplane : BroadcastReceiver() {
 
     private fun notifyFlightsCountUpdated(context: Context, count: Int) {
         Intent().also { intent ->
-            intent.action = "com.example.travelapp.flightsCountUpdated"
-            intent.putExtra("flights_count", count)
+            intent.action = Constants.LACTION_FLIGHT_COUNTS_UPDATED
+            intent.putExtra(Constants.FLIGHTS_COUNT_KEY, count)
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
         }
     }

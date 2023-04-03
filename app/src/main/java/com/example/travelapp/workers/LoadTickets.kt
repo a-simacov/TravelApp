@@ -6,6 +6,7 @@ import androidx.work.WorkerParameters
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
 import com.example.travelapp.db.Ticket
+import com.example.travelapp.tools.Constants
 import com.example.travelapp.tools.sendLocalBroadcastInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,8 +14,6 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class LoadTickets(val context: Context, workingParameters: WorkerParameters) : Worker(context, workingParameters) {
-
-    private val successAction = "com.example.travelapp.uploadedNewTickets"
 
     override fun doWork(): Result {
         val dao = Db.getDb(applicationContext).getDao()
@@ -30,7 +29,7 @@ class LoadTickets(val context: Context, workingParameters: WorkerParameters) : W
             )
         }
 
-        sendLocalBroadcastInfo(context, successAction, "Uploaded new tickets.")
+        sendLocalBroadcastInfo(context, Constants.LACTION_TICKETS_UPLOADED, "Uploaded new tickets.")
 
         return Result.success()
     }
