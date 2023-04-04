@@ -13,6 +13,7 @@ import com.example.travelapp.receivers.BCReceiverAirplane
 import com.example.travelapp.receivers.BCReceiverBluetooth
 import com.example.travelapp.receivers.BCReceiverTicketsUploaded
 import com.example.travelapp.tools.Constants
+import com.example.travelapp.ui.home.HomeActivity
 import com.example.travelapp.workers.LoadAdventures
 import com.example.travelapp.workers.LoadTickets
 import java.util.UUID
