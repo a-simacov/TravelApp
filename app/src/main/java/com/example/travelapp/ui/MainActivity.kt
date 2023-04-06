@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadAdventuresOneTime() {
         val oneTimeRequest = OneTimeWorkRequestBuilder<LoadAdventures>()
             .setInitialDelay(15, TimeUnit.SECONDS)
-            .addTag("loadAdventuresOneTime")
+            .addTag(Constants.TAG_WI_LOAD_ADVS_SINGLE)
             .build()
         wm.enqueue(oneTimeRequest)
         checkStateById(oneTimeRequest.id)
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         val oneTimeRequest = OneTimeWorkRequestBuilder<LoadTickets>()
             .setInputData(data)
             .setInitialDelay(10, TimeUnit.SECONDS)
-            .addTag("loadTicketsOneTime")
+            .addTag(Constants.TAG_WI_LOAD_TICKETS_SINGLE)
             .build()
         wm.enqueue(oneTimeRequest)
         checkStateById(oneTimeRequest.id)

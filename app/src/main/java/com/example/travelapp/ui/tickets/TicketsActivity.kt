@@ -5,14 +5,18 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.example.travelapp.R
 import com.example.travelapp.adapters.TicketsRecyclerAdapter
 import com.example.travelapp.databinding.ActivityTicketsBinding
 import com.example.travelapp.databinding.TicketDialogBinding
 import com.example.travelapp.db.Ticket
+import com.example.travelapp.tools.Constants
 import com.example.travelapp.tools.FlightsCountUpdater
 import com.example.travelapp.tools.openSearch
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.util.*
 
 class TicketsActivity : AppCompatActivity() {
     lateinit var viewModel: TicketsViewModel
@@ -37,8 +41,11 @@ class TicketsActivity : AppCompatActivity() {
         // При изменении tickets, он будет преобразован в MutableList и сообщит адаптеру об изменениях
         viewModel.tickets.observe(this) {
             val adapter = recyclerView.adapter as TicketsRecyclerAdapter
-            adapter.tickets = it.toMutableList()
-            adapter.notifyDataSetChanged()
+            println("Tickets observed: ${it?.joinToString()}")
+            it?.also {
+                adapter.tickets = it.toMutableList()
+                adapter.notifyDataSetChanged()
+            }
         }
 
         recyclerView.adapter = TicketsRecyclerAdapter(viewModel)
@@ -49,6 +56,8 @@ class TicketsActivity : AppCompatActivity() {
         }
 
         FlightsCountUpdater(this).start(dataBinding.tvFlightsCountTickets)
+
+        attachTicketsUpdate()
     }
 
     private fun addTicketOnCLick() {
@@ -85,6 +94,22 @@ class TicketsActivity : AppCompatActivity() {
                 qrLink = ""
             )
         }
+    }
+
+    private fun attachTicketsUpdate() {
+        var workId: UUID? = null
+        WorkManager.getInstance(applicationContext)
+            .getWorkInfosByTagLiveData(Constants.TAG_WI_LOAD_TICKETS_SINGLE)
+            .observe(this) { workInfos ->
+                workInfos.forEach { workInfo ->
+                    if (workInfo.state == WorkInfo.State.ENQUEUED) {
+                        workId = workInfo.id
+                    } else if (workId == workInfo.id && workInfo.state == WorkInfo.State.SUCCEEDED) {
+                        viewModel.updateAllTickets()
+                        return@observe
+                    }
+                }
+            }
     }
 
 }

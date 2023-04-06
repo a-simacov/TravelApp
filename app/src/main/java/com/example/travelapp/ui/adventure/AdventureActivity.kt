@@ -2,17 +2,22 @@ package com.example.travelapp.ui.adventure
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.example.travelapp.R
 import com.example.travelapp.adapters.AdventureRecyclerAdapter
 import com.example.travelapp.databinding.ActivityAdventureBinding
 import com.example.travelapp.databinding.PlacesDialogBinding
 import com.example.travelapp.db.Places
+import com.example.travelapp.tools.Constants
 import com.example.travelapp.tools.FlightsCountUpdater
 import com.example.travelapp.tools.openSearch
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.util.*
 
 class AdventureActivity : AppCompatActivity() {
     lateinit var viewModel: AdventureViewModel
@@ -48,6 +53,8 @@ class AdventureActivity : AppCompatActivity() {
         }
 
         FlightsCountUpdater(this).start(dataBinding.tvFlightsCountAdv)
+
+        attachPlacesUpdate()
     }
 
     private fun addPlaceOnCLick() {
@@ -83,4 +90,21 @@ class AdventureActivity : AppCompatActivity() {
             )
         }
     }
+
+    private fun attachPlacesUpdate() {
+        var workId: UUID? = null
+        WorkManager.getInstance(applicationContext)
+            .getWorkInfosByTagLiveData(Constants.TAG_WI_LOAD_ADVS_SINGLE)
+            .observe(this) { workInfos ->
+                workInfos.forEach { workInfo ->
+                    if (workInfo.state == WorkInfo.State.ENQUEUED) {
+                        workId = workInfo.id
+                    } else if (workId == workInfo.id && workInfo.state == WorkInfo.State.SUCCEEDED) {
+                        viewModel.updateAllPlaces()
+                        return@observe
+                    }
+                }
+            }
+    }
+
 }

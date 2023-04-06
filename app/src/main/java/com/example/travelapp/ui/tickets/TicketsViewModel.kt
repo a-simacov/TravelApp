@@ -3,7 +3,6 @@ package com.example.travelapp.ui.tickets
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.travelapp.db.*
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,50 +14,44 @@ import kotlin.system.measureTimeMillis
 // используется именно AndroidViewModel, т.к. она может принимать контекст
 class TicketsViewModel(application: Application) : AndroidViewModel(application) {
 
-    var tickets: LiveData<List<Ticket>>
-    private val repository: Repository
+    var tickets = MutableLiveData<List<Ticket>>(emptyList())
     val searchText = MutableLiveData("")
+    private var repository: Repository
 
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        tickets = repository.tickets
+        updateAllTickets()
+    }
+
+    fun updateAllTickets() {
+        CoroutineScope(Dispatchers.IO).launch {
+            tickets.postValue(repository.getAllTickets())
+        }
     }
 
     fun delete(ticket: Ticket) {
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.deleteTicket(ticket)
         }
+        println(tickets.value?.joinToString())//При удалении билета из базы, не удаляется элемент из LD
     }
 
     fun clear() {
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.deleteTickets()
         }
+        tickets.value = emptyList()
     }
 
     fun add(ticket: Ticket) {
-        val map = mutableMapOf<CoroutineDispatcher, Long>(
-            Dispatchers.Main to 0,
-            Dispatchers.Unconfined to 0,
-            Dispatchers.IO to 0,
-            Dispatchers.Default to 0
-        )
-        map.forEach { (disp, _) ->
-            map[disp] = measureTimeMillis {
-                CoroutineScope(disp).launch {
-                    repository.addTicket(ticket)
-                }
-            }
-            Log.i("DispatchersTime", "$disp time: ${map[disp]}")
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.addTicket(ticket)
         }
-
-        val winner = map.minBy {it.value}
-        Log.i( "DispatchersTime", "Winner is $winner")
     }
 
     fun deleteById(id: Int) {
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.deleteTicketById(id)
         }
     }

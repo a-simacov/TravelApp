@@ -6,11 +6,13 @@ import androidx.work.WorkerParameters
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
 import com.example.travelapp.db.Repository
+import com.example.travelapp.db.Ticket
 import com.example.travelapp.tools.Constants
 import com.example.travelapp.tools.sendLocalBroadcastInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class LoadAdventures(val context: Context, workingParameters: WorkerParameters) : Worker(context, workingParameters) {
 
@@ -18,13 +20,10 @@ class LoadAdventures(val context: Context, workingParameters: WorkerParameters) 
         val dao = Db.getDb(applicationContext).getDao()
         val repository = Repository(dao)
 
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.deletePlaces()
             repository.addPlaces(
-                listOf(
-                    Places(null, "place 1", "info 1", "", "detail 1"),
-                    Places(null, "place 2", "info 2", "", "detail 2")
-                )
+                demoPlaces()
             )
         }
 
@@ -32,5 +31,19 @@ class LoadAdventures(val context: Context, workingParameters: WorkerParameters) 
 
         return Result.success()
     }
+
+    private fun demoPlaces(): List<Places> {
+        val placesCount = Random.nextInt(1, 6)
+        return List(placesCount) {
+            val nameNum = Random.nextInt(1, 12)
+            Places(null,
+                "place $nameNum",
+                "info $nameNum",
+                "",
+                "detail $nameNum"
+            )
+        }
+    }
+
 
 }

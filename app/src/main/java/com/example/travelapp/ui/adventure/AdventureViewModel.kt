@@ -16,15 +16,22 @@ import kotlin.system.measureTimeMillis
 
 class AdventureViewModel(application: Application) : AndroidViewModel(application) {
 
-    var places: LiveData<List<Places>>
-    private val repository: Repository
+    var places = MutableLiveData<List<Places>>(emptyList())
     val searchText = MutableLiveData("")
+    private val repository: Repository
 
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        places = repository.places
+        updateAllPlaces()
     }
+
+    fun updateAllPlaces() {
+        CoroutineScope(Dispatchers.IO).launch {
+            places.postValue(repository.getAllPlaces())
+        }
+    }
+
 
     fun delete(place: Places) {
         CoroutineScope(Dispatchers.Unconfined).launch {
@@ -39,23 +46,9 @@ class AdventureViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun add(place: Places) {
-        val map = mutableMapOf<CoroutineDispatcher, Long>(
-            Dispatchers.Main to 0,
-            Dispatchers.Unconfined to 0,
-            Dispatchers.IO to 0,
-            Dispatchers.Default to 0
-        )
-        map.forEach { (disp, _) ->
-            map[disp] = measureTimeMillis {
-                CoroutineScope(disp).launch {
-                    repository.addPlace(place)
-                }
-            }
-            Log.i("DispatchersTime", "$disp time: ${map[disp]}")
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.addPlace(place)
         }
-
-        val winner = map.minBy {it.value}
-        Log.i( "DispatchersTime", "Winner is $winner")
     }
 
 }

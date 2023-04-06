@@ -22,7 +22,7 @@ class LoadTickets(val context: Context, workingParameters: WorkerParameters) : W
         val cityFrom = inputData.getString("cityFrom") ?: "demo city"
         val cityTo = inputData.getString("cityTo") ?: "demo city"
 
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.deleteTickets()
             repository.addTickets(
                 demoTickets(cityFrom, cityTo)
@@ -35,7 +35,7 @@ class LoadTickets(val context: Context, workingParameters: WorkerParameters) : W
     }
 
     private fun demoTickets(cityFrom: String, cityTo: String): List<Ticket> {
-        val ticketsCount = 5
+        val ticketsCount = Random.nextInt(1, 6)
         return List(ticketsCount) {
             val date = "2023-${Random.nextInt(1, 12)}-${Random.nextInt(1, 20)}"
             val airline = if (Random.nextInt(1, 3) == 1) "Aeroflot" else "S7"
