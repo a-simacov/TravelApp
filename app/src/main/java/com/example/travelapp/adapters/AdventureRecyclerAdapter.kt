@@ -49,7 +49,6 @@ class AdventureRecyclerAdapter(private val viewModel: AdventureViewModel) : Recy
 
     private fun deletePlace(place: Places, position: Int) {
         viewModel.delete(place)
-        places.removeAt(position)
         notifyItemRemoved(position)
     }
 }

@@ -33,6 +33,7 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     fun delete(ticket: Ticket) {
         CoroutineScope(Dispatchers.IO).launch {
             repository.deleteTicket(ticket)
+            updateAllTickets()
         }
         println(tickets.value?.joinToString())//При удалении билета из базы, не удаляется элемент из LD
     }

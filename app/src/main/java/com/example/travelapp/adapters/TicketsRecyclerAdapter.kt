@@ -50,7 +50,6 @@ class TicketsRecyclerAdapter(private val viewModel: TicketsViewModel) : Recycler
 
     private fun deleteTicket(ticket: Ticket, position: Int) {
         viewModel.delete(ticket)
-        tickets.removeAt(position)
         notifyItemRemoved(position)
     }
 }

@@ -36,6 +36,7 @@ class AdventureViewModel(application: Application) : AndroidViewModel(applicatio
     fun delete(place: Places) {
         CoroutineScope(Dispatchers.Unconfined).launch {
             repository.deletePlace(place)
+            updateAllPlaces()
         }
     }
 
@@ -43,6 +44,7 @@ class AdventureViewModel(application: Application) : AndroidViewModel(applicatio
         CoroutineScope(Dispatchers.Unconfined).launch {
             repository.deletePlaces()
         }
+        places.value = emptyList()
     }
 
     fun add(place: Places) {
