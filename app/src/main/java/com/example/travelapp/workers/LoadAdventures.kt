@@ -22,8 +22,8 @@ class LoadAdventures(val context: Context, workingParameters: WorkerParameters) 
             repository.deletePlaces()
             repository.addPlaces(
                 listOf(
-                    Places(null, "place 1", "info 1", "", "detail 1"),
-                    Places(null, "place 2", "info 2", "", "detail 2")
+                    Places(null, "Vietnam", "info 1", "", "detail 1"),
+                    Places(null, "Spain", "info 2", "", "detail 2")
                 )
             )
         }
