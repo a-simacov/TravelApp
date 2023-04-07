@@ -3,6 +3,7 @@ package com.example.travelapp.tools
 object Constants {
     const val FLIGHTS_COUNT_KEY = "flights_count"
     const val PREFS_FILE_NAME = "travel_data"
+    const val PREFS_USERNAME_KEY = "user_name"
 
     const val ACTION_BT_STATE_CHANGED = "android.bluetooth.adapter.action.STATE_CHANGED"
     const val ACTION_AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE"

@@ -5,9 +5,11 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.example.travelapp.databinding.ActivityMainBinding
+import com.example.travelapp.network.RetrofitClient
 import com.example.travelapp.receivers.BCReceiverAdventuresUploaded
 import com.example.travelapp.receivers.BCReceiverAirplane
 import com.example.travelapp.receivers.BCReceiverBluetooth
@@ -16,6 +18,9 @@ import com.example.travelapp.tools.Constants
 import com.example.travelapp.ui.home.HomeActivity
 import com.example.travelapp.workers.LoadAdventures
 import com.example.travelapp.workers.LoadTickets
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -32,8 +37,24 @@ class MainActivity : AppCompatActivity() {
 
         initOnClickListeners()
         loadData()
-
         registerBCReceivers()
+        saveUserNameToPrefs()
+    }
+
+    private fun saveUserNameToPrefs() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val user = RetrofitClient.retroifitService.getUser()
+                user.getValue("name").also { userName ->
+                    applicationContext.getSharedPreferences(Constants.PREFS_FILE_NAME,MODE_PRIVATE)
+                        .edit()
+                        .putString(Constants.PREFS_USERNAME_KEY, userName)
+                        .apply()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun registerBCReceivers() {

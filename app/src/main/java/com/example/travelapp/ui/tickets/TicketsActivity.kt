@@ -49,6 +49,10 @@ class TicketsActivity : AppCompatActivity() {
         }
 
         FlightsCountUpdater(this).start(dataBinding.tvFlightsCountTickets)
+
+        viewModel.userName.observe(this) {
+            dataBinding.tvUserNameTickets.text = it
+        }
     }
 
     private fun addTicketOnCLick() {

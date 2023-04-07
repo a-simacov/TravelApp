@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.travelapp.db.*
+import com.example.travelapp.tools.getUserNamePrefs
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,11 +19,13 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     var tickets: LiveData<List<Ticket>>
     private val repository: Repository
     val searchText = MutableLiveData("")
+    var userName = MutableLiveData<String>()
 
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
         tickets = repository.tickets
+        userName.value = getUserNamePrefs(application.applicationContext)
     }
 
     fun delete(ticket: Ticket) {

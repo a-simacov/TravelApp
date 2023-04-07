@@ -48,6 +48,10 @@ class AdventureActivity : AppCompatActivity() {
         }
 
         FlightsCountUpdater(this).start(dataBinding.tvFlightsCountAdv)
+
+        viewModel.userName.observe(this) {
+            dataBinding.tvUserNameAdv.text = it
+        }
     }
 
     private fun addPlaceOnCLick() {
