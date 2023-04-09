@@ -18,9 +18,7 @@ import com.example.travelapp.tools.Constants
 import com.example.travelapp.ui.home.HomeActivity
 import com.example.travelapp.workers.LoadAdventures
 import com.example.travelapp.workers.LoadTickets
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -129,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadTickets() {
         loadTicketsOneTime()
-        loadTicketsPeriodic()
+        //loadTicketsPeriodic()
     }
 
     private fun loadTicketsOneTime() {
@@ -140,7 +138,7 @@ class MainActivity : AppCompatActivity() {
 
         val oneTimeRequest = OneTimeWorkRequestBuilder<LoadTickets>()
             .setInputData(data)
-            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setInitialDelay(1, TimeUnit.SECONDS)
             .addTag("loadTicketsOneTime")
             .build()
         wm.enqueue(oneTimeRequest)

@@ -35,9 +35,12 @@ class TicketsActivity : AppCompatActivity() {
 
         // Подписываемся на изменения в tickets из viewModel
         // При изменении tickets, он будет преобразован в MutableList и сообщит адаптеру об изменениях
-        viewModel.tickets.observe(this) {
+        viewModel.tickets.observe(this) { it ->
             val adapter = recyclerView.adapter as TicketsRecyclerAdapter
             adapter.tickets = it.toMutableList()
+            viewModel.weather.value?.let { weather ->
+                adapter.weather = weather
+            }
             adapter.notifyDataSetChanged()
         }
 

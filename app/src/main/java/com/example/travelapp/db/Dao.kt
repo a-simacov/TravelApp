@@ -26,6 +26,8 @@ interface Dao {
     suspend fun deleteTicket(ticket: Ticket)
     @Query("SELECT * FROM tickets")
     fun getAllTickets(): LiveData<List<Ticket>>
+    @Query("SELECT * FROM tickets")
+    suspend fun getTickets(): List<Ticket>
     @Query("DELETE FROM tickets")
     suspend fun deleteTickets()
 

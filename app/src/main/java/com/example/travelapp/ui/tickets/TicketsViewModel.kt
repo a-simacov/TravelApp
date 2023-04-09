@@ -1,41 +1,64 @@
 package com.example.travelapp.ui.tickets
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.travelapp.db.*
+import androidx.lifecycle.viewModelScope
+import com.example.travelapp.db.Db
+import com.example.travelapp.db.Repository
+import com.example.travelapp.db.Ticket
+import com.example.travelapp.network.WeatherRFClient
 import com.example.travelapp.tools.getUserNamePrefs
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 
 // используется именно AndroidViewModel, т.к. она может принимать контекст
 class TicketsViewModel(application: Application) : AndroidViewModel(application) {
 
-    var tickets: LiveData<List<Ticket>>
+    var tickets = MutableLiveData<List<Ticket>>()
     private val repository: Repository
     val searchText = MutableLiveData("")
     var userName = MutableLiveData<String>()
+    var weather = MutableLiveData<MutableMap<String, String>>()
 
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        tickets = repository.tickets
         userName.value = getUserNamePrefs(application.applicationContext)
+        updateWeather(application.applicationContext)
+    }
+
+    private fun updateWeather(context: Context) {
+        viewModelScope.launch {
+            val dTickets = withContext(Dispatchers.IO) { repository.getTickets() }
+            val citiesWeather = mutableMapOf<String, String>()
+            try {
+                dTickets.forEach { ticket ->
+                    if (!citiesWeather.contains(ticket.cityTo)) {
+                        val cityWeather = WeatherRFClient.retroifitService.getCityWeather(ticket.cityTo)
+                        citiesWeather[ticket.cityTo] = cityWeather.current.temp_c.toString()
+                    }
+                }
+                weather.value = citiesWeather
+            } catch (e: java.lang.Exception) {
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+            tickets.value = dTickets
+        }
     }
 
     fun delete(ticket: Ticket) {
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        viewModelScope.launch {
             repository.deleteTicket(ticket)
         }
     }
 
     fun clear() {
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        viewModelScope.launch {
             repository.deleteTickets()
         }
     }
@@ -49,7 +72,7 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
         )
         map.forEach { (disp, _) ->
             map[disp] = measureTimeMillis {
-                CoroutineScope(disp).launch {
+                viewModelScope.launch {
                     repository.addTicket(ticket)
                 }
             }
@@ -61,7 +84,7 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun deleteById(id: Int) {
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        viewModelScope.launch {
             repository.deleteTicketById(id)
         }
     }

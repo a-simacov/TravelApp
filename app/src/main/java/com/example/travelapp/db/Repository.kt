@@ -22,6 +22,10 @@ class Repository(private val dao: Dao) {
 
     suspend fun getTicket(id: Int): Ticket { return dao.getTicket(id) }
 
+    suspend fun getAllTickets(): LiveData<List<Ticket>> { return dao.getAllTickets() }
+
+    suspend fun getTickets(): List<Ticket> { return dao.getTickets() }
+
     suspend fun deleteTicket(ticket: Ticket) { dao.deleteTicket(ticket) }
 
     suspend fun deleteTickets() { dao.deleteTickets() }

@@ -14,6 +14,7 @@ import com.example.travelapp.ui.tickets.TicketsViewModel
 
 class TicketsRecyclerAdapter(private val viewModel: TicketsViewModel) : RecyclerView.Adapter<TicketsRecyclerAdapter.MyViewHolder>() {
     var tickets = mutableListOf<Ticket>()
+    var weather = mutableMapOf<String, String>()
 
     class MyViewHolder(val binding: TicketItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -31,6 +32,7 @@ class TicketsRecyclerAdapter(private val viewModel: TicketsViewModel) : Recycler
         val ticket: Ticket = tickets[position]
         with (holder.binding) {
             this.ticket = ticket
+            this.tvTemp.text = weather.getOrDefault(ticket.cityTo, "")
             cLayoutTicket.setOnClickListener { openTicket(this, ticket) }
             btnDeleteTicket.setOnClickListener { deleteTicket(ticket, position) }
         }
