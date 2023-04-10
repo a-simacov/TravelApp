@@ -1,8 +1,11 @@
 package com.example.travelapp.network
 
+import com.google.gson.JsonObject
+
 data class CityWeather (
     val location: Location,
-    val current: Current
+    val current: Current,
+    val forecast: JsonObject
 )
 
 data class Location(val name: String)

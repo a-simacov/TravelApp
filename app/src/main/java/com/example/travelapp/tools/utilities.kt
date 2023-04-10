@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun sendLocalBroadcastInfo(context: Context, action: String, info: String) {
     Intent().also {
@@ -28,4 +30,13 @@ fun getUserNamePrefs(context: Context): String {
         AppCompatActivity.MODE_PRIVATE
     )
     return prefs.getString(Constants.PREFS_USERNAME_KEY, "") ?: ""
+}
+
+fun getMinDate(dateString: String): String {
+    val instAfterThreeDays = Calendar.getInstance().also { it.add(Calendar.DATE, 3) }
+    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).also { sdf ->
+        val date = sdf.parse(dateString)
+        val datePlus3Days = sdf.parse(sdf.format(instAfterThreeDays.time))
+        return sdf.format(minOf(date, datePlus3Days))
+    }
 }

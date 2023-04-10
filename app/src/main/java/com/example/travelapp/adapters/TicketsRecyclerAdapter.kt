@@ -18,7 +18,7 @@ import com.example.travelapp.ui.tickets.TicketsViewModel
 
 class TicketsRecyclerAdapter(private val context: Context, private val viewModel: TicketsViewModel) : RecyclerView.Adapter<TicketsRecyclerAdapter.MyViewHolder>() {
     var tickets = mutableListOf<Ticket>()
-    var weather = mutableMapOf<String, CityWeather>()
+    var weather = mutableMapOf<Ticket, CityWeather>()
 
     class MyViewHolder(val binding: TicketItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -38,7 +38,7 @@ class TicketsRecyclerAdapter(private val context: Context, private val viewModel
             binding.ticket = ticket
             binding.cLayoutTicket.setOnClickListener { openTicket(binding, ticket) }
             binding.btnDeleteTicket.setOnClickListener { deleteTicket(ticket, position) }
-            updateWeather(binding, ticket.cityTo)
+            updateWeather(binding, ticket)
         }
     }
 
@@ -46,11 +46,17 @@ class TicketsRecyclerAdapter(private val context: Context, private val viewModel
         return tickets.size
     }
 
-    private fun updateWeather(binding: TicketItemBinding, cityName: String) {
-        val cityWeather = weather.getOrDefault(cityName, null) ?: return
-        binding.cityTemperature = cityWeather.current.temp_c.toString()
+    private fun updateWeather(binding: TicketItemBinding, ticket: Ticket) {
+        val cityWeather = weather.getOrDefault(ticket, null) ?: return
+        val forecastdays = cityWeather.forecast.getAsJsonArray("forecastday")
+
+        if (forecastdays.size() == 0) return
+
         try {
-            val imgUrl = "http:${cityWeather.current.condition.icon}"
+            val day = forecastdays[0].asJsonObject.getAsJsonObject("day")
+            binding.cityTemperature = day.get("avgtemp_c").asString
+            val icon = day.getAsJsonObject("condition").get("icon").asString
+            val imgUrl = "http:${icon}"
             Glide.with(context)
                 .load(imgUrl)
                 .into(binding.imgTicket)

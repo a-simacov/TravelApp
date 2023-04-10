@@ -39,7 +39,10 @@ class LoadTickets(val context: Context, workingParameters: WorkerParameters) : W
     private fun demoTickets(citiesFrom: Array<String>, citiesTo: Array<String>): List<Ticket> {
         val ticketsCount = 5
         return List(ticketsCount) {
-            val date = "2023-${Random.nextInt(1, 12)}-${Random.nextInt(1, 20)}"
+            val date = String.format("2023-%02d-%02d",
+                Random.nextInt(4, 12),
+                Random.nextInt(11, 30)
+            )
             val airline = if (Random.nextInt(1, 3) == 1) "Aeroflot" else "S7"
             Ticket(null, citiesFrom.random(), citiesTo.random(), date, date, airline, "")
         }

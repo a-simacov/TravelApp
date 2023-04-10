@@ -12,6 +12,7 @@ import com.example.travelapp.db.Repository
 import com.example.travelapp.db.Ticket
 import com.example.travelapp.network.CityWeather
 import com.example.travelapp.network.WeatherRFClient
+import com.example.travelapp.tools.getMinDate
 import com.example.travelapp.tools.getUserNamePrefs
 import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
@@ -23,7 +24,7 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     private val repository: Repository
     val searchText = MutableLiveData("")
     var userName = MutableLiveData<String>()
-    var weather = MutableLiveData<MutableMap<String, CityWeather>>()
+    var weather = MutableLiveData<MutableMap<Ticket, CityWeather>>()
 
     init {
         val dao = Db.getDb(application).getDao()
@@ -35,13 +36,12 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     private fun updateWeather(context: Context) {
         viewModelScope.launch {
             val dTickets = withContext(Dispatchers.IO) { repository.getTickets() }
-            val citiesWeather = mutableMapOf<String, CityWeather>()
+            val citiesWeather = mutableMapOf<Ticket, CityWeather>()
             try {
                 dTickets.forEach { ticket ->
-                    if (!citiesWeather.contains(ticket.cityTo)) {
-                        citiesWeather[ticket.cityTo] = WeatherRFClient.retroifitService
-                            .getCityWeather(ticket.cityTo, ticket.arrivalDate)
-                    }
+                    val dateWeather = getMinDate(ticket.arrivalDate)
+                    citiesWeather[ticket] = WeatherRFClient.retroifitService
+                        .getCityWeather(ticket.cityTo, dateWeather)
                 }
                 weather.value = citiesWeather
             } catch (e: java.lang.Exception) {
