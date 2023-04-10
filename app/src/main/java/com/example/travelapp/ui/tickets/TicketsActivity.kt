@@ -44,7 +44,7 @@ class TicketsActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
 
-        recyclerView.adapter = TicketsRecyclerAdapter(viewModel)
+        recyclerView.adapter = TicketsRecyclerAdapter(this, viewModel)
 
         dataBinding.imageViewAddTicket.setOnClickListener{ addTicketOnCLick() }
         dataBinding.btnSearchTickets.setOnClickListener {

@@ -7,6 +7,9 @@
         <variable
             name="ticket"
             type="com.example.travelapp.db.Ticket" />
+        <variable
+            name="cityTemperature"
+            type="String" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -89,7 +92,8 @@
                         android:textAlignment="viewEnd"
                         android:textColor="#1B1B1D"
                         android:textSize="14sp"
-                        tools:text="+5.0" />
+                        android:text="@{@string/cityTemperature(cityTemperature)}"
+                        tools:text="+5.0℃" />
 
                 </LinearLayout>
 

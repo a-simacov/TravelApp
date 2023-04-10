@@ -19,13 +19,15 @@ class LoadTickets(val context: Context, workingParameters: WorkerParameters) : W
         val dao = Db.getDb(applicationContext).getDao()
         val repository = Repository(dao)
 
-        val cityFrom = inputData.getString("cityFrom") ?: "demo city"
-        val cityTo = inputData.getString("cityTo") ?: "demo city"
+//        val cityFrom = inputData.getString("cityFrom") ?: "demo city"
+//        val cityTo = inputData.getString("cityTo") ?: "demo city"
+        val citiesFrom = arrayOf("Moscow", "Omsk", "Ekaterinburg")
+        val citiesTo = arrayOf("Madrid", "Chisinau", "Pekin")
 
         CoroutineScope(Dispatchers.Unconfined).launch {
             repository.deleteTickets()
             repository.addTickets(
-                demoTickets(cityFrom, cityTo)
+                demoTickets(citiesFrom, citiesTo)
             )
         }
 
@@ -34,12 +36,12 @@ class LoadTickets(val context: Context, workingParameters: WorkerParameters) : W
         return Result.success()
     }
 
-    private fun demoTickets(cityFrom: String, cityTo: String): List<Ticket> {
+    private fun demoTickets(citiesFrom: Array<String>, citiesTo: Array<String>): List<Ticket> {
         val ticketsCount = 5
         return List(ticketsCount) {
             val date = "2023-${Random.nextInt(1, 12)}-${Random.nextInt(1, 20)}"
             val airline = if (Random.nextInt(1, 3) == 1) "Aeroflot" else "S7"
-            Ticket(null, cityFrom, cityTo, date, date, airline, "")
+            Ticket(null, citiesFrom.random(), citiesTo.random(), date, date, airline, "")
         }
     }
 

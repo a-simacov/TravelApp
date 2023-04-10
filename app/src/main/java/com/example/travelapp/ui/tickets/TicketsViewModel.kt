@@ -5,12 +5,12 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
 import com.example.travelapp.db.Ticket
+import com.example.travelapp.network.CityWeather
 import com.example.travelapp.network.WeatherRFClient
 import com.example.travelapp.tools.getUserNamePrefs
 import kotlinx.coroutines.*
@@ -23,7 +23,7 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     private val repository: Repository
     val searchText = MutableLiveData("")
     var userName = MutableLiveData<String>()
-    var weather = MutableLiveData<MutableMap<String, String>>()
+    var weather = MutableLiveData<MutableMap<String, CityWeather>>()
 
     init {
         val dao = Db.getDb(application).getDao()
@@ -35,12 +35,12 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     private fun updateWeather(context: Context) {
         viewModelScope.launch {
             val dTickets = withContext(Dispatchers.IO) { repository.getTickets() }
-            val citiesWeather = mutableMapOf<String, String>()
+            val citiesWeather = mutableMapOf<String, CityWeather>()
             try {
                 dTickets.forEach { ticket ->
                     if (!citiesWeather.contains(ticket.cityTo)) {
-                        val cityWeather = WeatherRFClient.retroifitService.getCityWeather(ticket.cityTo)
-                        citiesWeather[ticket.cityTo] = cityWeather.current.temp_c.toString()
+                        citiesWeather[ticket.cityTo] = WeatherRFClient.retroifitService
+                            .getCityWeather(ticket.cityTo, ticket.arrivalDate)
                     }
                 }
                 weather.value = citiesWeather
