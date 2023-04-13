@@ -1,21 +1,38 @@
 package com.example.travelapp.ui.home
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.app.AlertDialog
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.travelapp.R
 import com.example.travelapp.databinding.ActivityHomeBinding
-import com.example.travelapp.tools.FlightsCountUpdater
+import com.example.travelapp.tools.*
+import com.example.travelapp.ui.SignOutDialog
 import com.example.travelapp.ui.adventure.AdventureActivity
 import com.example.travelapp.ui.tickets.TicketsActivity
-import com.example.travelapp.ui.tickets.TicketsViewModel
 
 class HomeActivity : AppCompatActivity() {
 
     lateinit var viewModel: HomeViewModel
     lateinit var dataBinding: ActivityHomeBinding
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(AppUser.isAuth) {
+        override fun handleOnBackPressed() {
+            showDialog()
+        }
+    }
+
+    private fun showDialog(){
+        AlertDialog.Builder(this).apply {
+            setTitle(Constants.DIALOG_TITLE_WARN)
+            setMessage(Constants.MSG_CLOSE_APP)
+            setPositiveButton(Constants.DIALOG_BTN_YES) { _, _ -> finishAffinity() }
+            setNegativeButton(Constants.DIALOG_BTN_NO, null)
+            show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,21 +49,22 @@ class HomeActivity : AppCompatActivity() {
         viewModel.userName.observe(this) {
             dataBinding.tvUserNameHome.text = it
         }
+
+        updateUserImg(this, dataBinding.ivUserHome)
+
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun initOnClickListeners() {
         dataBinding.tickets.setOnClickListener {
-            openActivity(TicketsActivity::class.java)
+            openActivity(this, TicketsActivity::class.java)
         }
         dataBinding.adventure.setOnClickListener{
-            openActivity(AdventureActivity::class.java)
+            openActivity(this, AdventureActivity::class.java)
         }
-    }
-
-    private fun openActivity(cls: Class<*>) {
-        this.startActivity(
-            Intent(this, cls)
-        )
+        dataBinding.ivUserHome.setOnClickListener {
+            if (AppUser.isAuth) SignOutDialog(this).showAlert()
+        }
     }
 
 }

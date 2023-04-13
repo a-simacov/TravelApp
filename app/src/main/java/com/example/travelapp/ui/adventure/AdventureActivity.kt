@@ -10,8 +10,11 @@ import com.example.travelapp.adapters.AdventureRecyclerAdapter
 import com.example.travelapp.databinding.ActivityAdventureBinding
 import com.example.travelapp.databinding.PlacesDialogBinding
 import com.example.travelapp.db.Places
+import com.example.travelapp.tools.AppUser
 import com.example.travelapp.tools.FlightsCountUpdater
 import com.example.travelapp.tools.openSearch
+import com.example.travelapp.tools.updateUserImg
+import com.example.travelapp.ui.SignOutDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AdventureActivity : AppCompatActivity() {
@@ -40,21 +43,32 @@ class AdventureActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
 
-        recyclerView.adapter = AdventureRecyclerAdapter(viewModel)
+        recyclerView.adapter = AdventureRecyclerAdapter(this, viewModel)
 
-        dataBinding.imageViewAddPlace.setOnClickListener{ addPlaceOnCLick() }
-        dataBinding.btnSearchAdventure.setOnClickListener {
-            openSearch(this, viewModel.searchText.value)
-        }
+        initOnClickListeners()
 
         FlightsCountUpdater(this).start(dataBinding.tvFlightsCountAdv)
 
         viewModel.userName.observe(this) {
             dataBinding.tvUserNameAdv.text = it
         }
+
+        updateUserImg(this, dataBinding.ivUserAdventure)
     }
 
-    private fun addPlaceOnCLick() {
+    private fun initOnClickListeners() {
+        dataBinding.imageViewAddPlace.setOnClickListener{
+            showAddPlaceDialog()
+        }
+        dataBinding.btnSearchAdventure.setOnClickListener {
+            openSearch(this, viewModel.searchText.value)
+        }
+        dataBinding.ivUserAdventure.setOnClickListener {
+            if (AppUser.isAuth) SignOutDialog(this).showAlert()
+        }
+    }
+
+    private fun showAddPlaceDialog() {
         val dialog = BottomSheetDialog(this)
         val dialogBinding = PlacesDialogBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
@@ -64,20 +78,22 @@ class AdventureActivity : AppCompatActivity() {
 
     private fun setDialogListeners(dialog: BottomSheetDialog, dialogBinding: PlacesDialogBinding) {
         with (dialogBinding) {
-            btnCancel.setOnClickListener { dialog.dismiss() }
+            btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
             btnDelete.setOnClickListener {
                 viewModel.clear()
                 dialog.dismiss()
             }
             btnAdd.setOnClickListener {
-                val newPlace = newPlace(this)
+                val newPlace = newPlaceFromDialog(this)
                 viewModel.add(newPlace)
                 dialog.dismiss()
             }
         }
     }
 
-    private fun newPlace(dialogBinding: PlacesDialogBinding): Places {
+    private fun newPlaceFromDialog(dialogBinding: PlacesDialogBinding): Places {
         return with (dialogBinding) {
             Places(
                 name = editTextName.text.toString(),

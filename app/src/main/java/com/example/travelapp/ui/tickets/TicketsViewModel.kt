@@ -2,8 +2,6 @@ package com.example.travelapp.ui.tickets
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -11,11 +9,9 @@ import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
 import com.example.travelapp.db.Ticket
 import com.example.travelapp.network.CityWeather
-import com.example.travelapp.network.WeatherRFClient
-import com.example.travelapp.tools.getMinDate
-import com.example.travelapp.tools.getUserNamePrefs
+import com.example.travelapp.tools.AppUser
+import com.example.travelapp.tools.showToast
 import kotlinx.coroutines.*
-import kotlin.system.measureTimeMillis
 
 // используется именно AndroidViewModel, т.к. она может принимать контекст
 class TicketsViewModel(application: Application) : AndroidViewModel(application) {
@@ -29,25 +25,21 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        userName.value = getUserNamePrefs(application.applicationContext)
-        updateWeather(application.applicationContext)
+        userName.value = AppUser.name
+        initTicketsAndWeather(application.applicationContext)
     }
 
-    private fun updateWeather(context: Context) {
+    // Как разбить этот метод на два?
+    private fun initTicketsAndWeather(context: Context) {
         viewModelScope.launch {
             val dTickets = withContext(Dispatchers.IO) { repository.getTickets() }
-            val citiesWeather = mutableMapOf<Ticket, CityWeather>()
             try {
-                dTickets.forEach { ticket ->
-                    val dateWeather = getMinDate(ticket.arrivalDate)
-                    citiesWeather[ticket] = WeatherRFClient.retroifitService
-                        .getCityWeather(ticket.cityTo, dateWeather)
-                }
-                weather.value = citiesWeather
+                weather.value = repository.getCitiesWeather(dTickets)
             } catch (e: java.lang.Exception) {
-                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                showToast(context, e.message)
             }
-            tickets.value = dTickets
+            tickets.value = dTickets // Почему, если эту строку переместить выше, то погода
+            // не будет возвращать результат???
         }
     }
 
@@ -64,23 +56,9 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun add(ticket: Ticket) {
-        val map = mutableMapOf<CoroutineDispatcher, Long>(
-            Dispatchers.Main to 0,
-            Dispatchers.Unconfined to 0,
-            Dispatchers.IO to 0,
-            Dispatchers.Default to 0
-        )
-        map.forEach { (disp, _) ->
-            map[disp] = measureTimeMillis {
-                viewModelScope.launch {
-                    repository.addTicket(ticket)
-                }
-            }
-            Log.i("DispatchersTime", "$disp time: ${map[disp]}")
+        viewModelScope.launch {
+            repository.addTicket(ticket)
         }
-
-        val winner = map.minBy {it.value}
-        Log.i( "DispatchersTime", "Winner is $winner")
     }
 
     fun deleteById(id: Int) {

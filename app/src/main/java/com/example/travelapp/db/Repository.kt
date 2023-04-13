@@ -1,9 +1,12 @@
 package com.example.travelapp.db
 
 import androidx.lifecycle.LiveData
+import com.example.travelapp.network.CityWeather
+import com.example.travelapp.network.WeatherRFClient
+import com.example.travelapp.tools.getMinDate
 
 class Repository(private val dao: Dao) {
-    val places: LiveData<List<Places>> = dao.getAllPlaces()
+    val places: LiveData<MutableList<Places>> = dao.getAllPlaces()
     val tickets: LiveData<List<Ticket>> = dao.getAllTickets()
 
     suspend fun addPlace(place: Places) { dao.insertPlace(place) }
@@ -31,4 +34,16 @@ class Repository(private val dao: Dao) {
     suspend fun deleteTickets() { dao.deleteTickets() }
 
     suspend fun deleteTicketById(id: Int) { dao.deleteTicketById(id) }
+
+    suspend fun getCitiesWeather(tickets: List<Ticket>): MutableMap<Ticket, CityWeather> {
+        val citiesWeather = mutableMapOf<Ticket, CityWeather>()
+
+        tickets.forEach { ticket ->
+            val dateWeather = getMinDate(ticket.arrivalDate)
+            citiesWeather[ticket] = WeatherRFClient.retroifitService
+                .getCityWeather(ticket.cityTo, dateWeather)
+        }
+
+        return citiesWeather
+    }
 }

@@ -10,8 +10,11 @@ import com.example.travelapp.adapters.TicketsRecyclerAdapter
 import com.example.travelapp.databinding.ActivityTicketsBinding
 import com.example.travelapp.databinding.TicketDialogBinding
 import com.example.travelapp.db.Ticket
+import com.example.travelapp.tools.AppUser
 import com.example.travelapp.tools.FlightsCountUpdater
 import com.example.travelapp.tools.openSearch
+import com.example.travelapp.tools.updateUserImg
+import com.example.travelapp.ui.SignOutDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class TicketsActivity : AppCompatActivity() {
@@ -46,19 +49,30 @@ class TicketsActivity : AppCompatActivity() {
 
         recyclerView.adapter = TicketsRecyclerAdapter(this, viewModel)
 
-        dataBinding.imageViewAddTicket.setOnClickListener{ addTicketOnCLick() }
-        dataBinding.btnSearchTickets.setOnClickListener {
-            openSearch(this, viewModel.searchText.value)
-        }
+        initOnClickListeners()
 
         FlightsCountUpdater(this).start(dataBinding.tvFlightsCountTickets)
 
         viewModel.userName.observe(this) {
             dataBinding.tvUserNameTickets.text = it
         }
+
+        updateUserImg(this, dataBinding.ivUserTickets)
     }
 
-    private fun addTicketOnCLick() {
+    private fun initOnClickListeners() {
+        dataBinding.imageViewAddTicket.setOnClickListener{
+            showAddTicketDialog()
+        }
+        dataBinding.btnSearchTickets.setOnClickListener {
+            openSearch(this, viewModel.searchText.value)
+        }
+        dataBinding.ivUserTickets.setOnClickListener {
+            if (AppUser.isAuth) SignOutDialog(this).showAlert()
+        }
+    }
+
+    private fun showAddTicketDialog() {
         val dialog = BottomSheetDialog(this)
         val dialogBinding = TicketDialogBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
@@ -68,20 +82,22 @@ class TicketsActivity : AppCompatActivity() {
 
     private fun setDialogListeners(dialog: BottomSheetDialog, dialogBinding: TicketDialogBinding) {
         with (dialogBinding) {
-            btnTicketCancel.setOnClickListener { dialog.dismiss() }
+            btnTicketCancel.setOnClickListener {
+                dialog.dismiss()
+            }
             btnTicketsDelete.setOnClickListener {
                 viewModel.clear()
                 dialog.dismiss()
             }
             btnTicketsAdd.setOnClickListener {
-                val newTicket = newTicket(this)
+                val newTicket = newTicketFromDialog(this)
                 viewModel.add(newTicket)
                 dialog.dismiss()
             }
         }
     }
 
-    private fun newTicket(dialogBinding: TicketDialogBinding): Ticket {
+    private fun newTicketFromDialog(dialogBinding: TicketDialogBinding): Ticket {
         return with (dialogBinding) {
             Ticket(
                 cityFrom = editTextCityFrom.text.toString(),

@@ -14,7 +14,7 @@ interface Dao {
     @Delete
     suspend fun deletePlace(places: Places)
     @Query("SELECT * FROM places")
-    fun getAllPlaces(): LiveData<List<Places>>
+    fun getAllPlaces(): LiveData<MutableList<Places>>
     @Query("DELETE FROM places")
     suspend fun deletePlaces()
 

@@ -27,13 +27,13 @@
             android:text="@{homeModel.userName}"
             android:textSize="40sp"
             app:layout_constraintBottom_toTopOf="@+id/textView4"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintEnd_toStartOf="@+id/ivUserHome"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="CodeBy Student" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/ivUserHome"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginTop="40dp"
@@ -242,9 +242,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/raleway_regular"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="@+id/ivUserHome"
+            app:layout_constraintStart_toStartOf="@+id/ivUserHome"
+            app:layout_constraintTop_toBottomOf="@+id/ivUserHome"
             tools:text="12 flights" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

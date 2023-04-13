@@ -1,17 +1,19 @@
 package com.example.travelapp.adapters
 
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.travelapp.R
 import com.example.travelapp.databinding.PlaceItemBinding
 import com.example.travelapp.db.Places
 import com.example.travelapp.ui.adventure.AdventureViewModel
 import com.example.travelapp.ui.adventure.PlaceActivity
 
-class AdventureRecyclerAdapter(private val viewModel: AdventureViewModel) : RecyclerView.Adapter<AdventureRecyclerAdapter.MyViewHolder>() {
+class AdventureRecyclerAdapter(private val context: Context, private val viewModel: AdventureViewModel) : RecyclerView.Adapter<AdventureRecyclerAdapter.MyViewHolder>() {
     var places = mutableListOf<Places>()
 
     // класс PlaceItemBinding - сгенерированный
@@ -33,6 +35,9 @@ class AdventureRecyclerAdapter(private val viewModel: AdventureViewModel) : Recy
             this.place = place
             cLayoutPlace.setOnClickListener { openPlace(this, place) }
             btnDeletePlace.setOnClickListener { deletePlace(place, position) }
+            Glide.with(context)
+                .load(place.imageUrl)
+                .into(imgPlace)
         }
     }
 
