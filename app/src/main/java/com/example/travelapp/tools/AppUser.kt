@@ -2,7 +2,7 @@ package com.example.travelapp.tools
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import com.example.travelapp.network.RetrofitClient
+import com.example.travelapp.network.NetworkRepo
 import com.example.travelapp.ui.MainActivity
 import com.example.travelapp.ui.home.HomeActivity
 import com.google.android.gms.tasks.Task
@@ -70,28 +70,14 @@ object AppUser {
 
     private fun setDefaultImgUrl(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val defaultUser = RetrofitClient.retroifitService.getUser()
-                imgUrl = defaultUser.getValue("image")
-            } catch (e: Exception) {
-                (context as AppCompatActivity).runOnUiThread {
-                    showToast(context, e.message)
-                }
-            }
+            imgUrl = NetworkRepo(context).getDefaultUserImgUrl()
         }
     }
 
     private fun setDefaultUserName(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val defaultUser = RetrofitClient.retroifitService.getUser()
-                name = defaultUser.getValue("name")
-                isAuth = false
-            } catch (e: Exception) {
-                (context as AppCompatActivity).runOnUiThread {
-                    showToast(context, e.message)
-                }
-            }
+            name = NetworkRepo(context).getDefaultUserName()
+            isAuth = false
         }
     }
 

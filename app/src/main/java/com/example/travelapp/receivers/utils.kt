@@ -27,5 +27,9 @@ fun registerBCReceivers(context: Context) {
             BCReceiverTicketsUploaded(),
             IntentFilter(Constants.LACTION_TICKETS_UPLOADED)
         )
+        bcManager.registerReceiver(
+            BCReceiverRepoError(),
+            IntentFilter(Constants.LACTION_REPO_ERROR)
+        )
     }
 }

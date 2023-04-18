@@ -9,8 +9,8 @@ import com.example.travelapp.db.Db
 import com.example.travelapp.db.Repository
 import com.example.travelapp.db.Ticket
 import com.example.travelapp.network.CityWeather
+import com.example.travelapp.network.NetworkRepo
 import com.example.travelapp.tools.AppUser
-import com.example.travelapp.tools.showToast
 import kotlinx.coroutines.*
 
 // используется именно AndroidViewModel, т.к. она может принимать контекст
@@ -29,17 +29,11 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
         initTicketsAndWeather(application.applicationContext)
     }
 
-    // Как разбить этот метод на два?
     private fun initTicketsAndWeather(context: Context) {
         viewModelScope.launch {
             val dTickets = withContext(Dispatchers.IO) { repository.getTickets() }
-            try {
-                weather.value = repository.getCitiesWeather(dTickets)
-            } catch (e: java.lang.Exception) {
-                showToast(context, e.message)
-            }
-            tickets.value = dTickets // Почему, если эту строку переместить выше, то погода
-            // не будет возвращать результат???
+            weather.value = NetworkRepo(context).getCitiesWeather(dTickets)
+            tickets.value = dTickets
         }
     }
 

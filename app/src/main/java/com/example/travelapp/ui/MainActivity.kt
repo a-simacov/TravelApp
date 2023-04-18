@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         initOnClickListeners()
         WMLoader(this).loadData()
-        registerBCReceivers(this)
+        registerBCReceivers(applicationContext)
     }
 
     private fun initOnClickListeners() {

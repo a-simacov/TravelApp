@@ -9,6 +9,7 @@ object Constants {
     const val ACTION_AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE"
     const val LACTION_ADV_UPLOADED = "com.example.travelapp.uploadedNewAdventures"
     const val LACTION_TICKETS_UPLOADED = "com.example.travelapp.uploadedNewTickets"
+    const val LACTION_REPO_ERROR = "com.example.travelapp.repoError"
     const val LACTION_FLIGHT_COUNTS_UPDATED = "com.example.travelapp.flightsCountUpdated"
 
     const val WEATHER_API_KEY = "8551b2c9fb2b49e2a62143532230804"
