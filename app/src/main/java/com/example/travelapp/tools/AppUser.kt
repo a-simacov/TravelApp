@@ -23,11 +23,8 @@ object AppUser {
 
     fun initUser(context: Context) {
         setDefaultImgUrl(context)
-        if (auth.currentUser != null) {
-            setAuthUserName(context)
-        } else {
-            setDefaultUserName(context)
-        }
+        setUserName(context)
+        openHomeIfUserIsAuth(context)
     }
 
     fun signUp(context: Context, email: String, pass: String, passConfirm: String) {
@@ -47,25 +44,17 @@ object AppUser {
 
     fun signOut(context: Context) {
         auth.signOut()
+        setUserName(context)
         (context as AppCompatActivity).finish()
         openActivity(context, MainActivity::class.java)
-        setDefaultUserName(context)
     }
 
     private fun signInUpOnComplete(context: Context, task: Task<AuthResult>) {
-        if (task.isSuccessful) {
-            setAuthUserName(context)
-        }
+        setUserName(context)
+        openHomeIfUserIsAuth(context)
         task.exception?.let {
             showToast(context, it.message)
         }
-    }
-
-    private fun setAuthUserName(context: Context) {
-        isAuth = true
-        name = auth.currentUser?.email!!
-        openActivity(context, HomeActivity::class.java)
-        (context as AppCompatActivity).finish()
     }
 
     private fun setDefaultImgUrl(context: Context) {
@@ -74,10 +63,21 @@ object AppUser {
         }
     }
 
-    private fun setDefaultUserName(context: Context) {
-        CoroutineScope(Dispatchers.IO).launch {
-            name = NetworkRepo(context).getDefaultUserName()
-            isAuth = false
+    private fun setUserName(context: Context) {
+        isAuth = (auth.currentUser != null)
+        if (isAuth) {
+            name = auth.currentUser?.email!!
+        } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                name = NetworkRepo(context).getDefaultUserName()
+            }
+        }
+    }
+
+    private fun openHomeIfUserIsAuth(context: Context) {
+        if (isAuth) {
+            openActivity(context, HomeActivity::class.java)
+            (context as AppCompatActivity).finish()
         }
     }
 
