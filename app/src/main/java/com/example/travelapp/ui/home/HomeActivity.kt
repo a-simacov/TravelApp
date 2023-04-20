@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.travelapp.R
 import com.example.travelapp.databinding.ActivityHomeBinding
 import com.example.travelapp.tools.*
+import com.example.travelapp.ui.HotelsActivity
 import com.example.travelapp.ui.SignOutDialog
 import com.example.travelapp.ui.adventure.AdventureActivity
 import com.example.travelapp.ui.tickets.TicketsActivity
@@ -61,6 +62,9 @@ class HomeActivity : AppCompatActivity() {
         }
         dataBinding.adventure.setOnClickListener{
             openActivity(this, AdventureActivity::class.java)
+        }
+        dataBinding.hotels.setOnClickListener{
+            openActivity(this, HotelsActivity::class.java)
         }
         dataBinding.ivUserHome.setOnClickListener {
             if (AppUser.isAuth) SignOutDialog(this).showAlert()

@@ -16,6 +16,11 @@
         android:theme="@style/Theme.TravelApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.HotelsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_hotels"
+            android:theme="@style/Theme.TravelApp" />
+        <activity
             android:name=".ui.SignUpActivity"
             android:exported="false" />
         <activity
