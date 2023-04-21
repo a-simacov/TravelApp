@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.travelapp.R
 import com.example.travelapp.databinding.ActivityHomeBinding
 import com.example.travelapp.tools.*
-import com.example.travelapp.ui.HotelsActivity
+import com.example.travelapp.ui.hotels.HotelsActivity
 import com.example.travelapp.ui.SignOutDialog
 import com.example.travelapp.ui.adventure.AdventureActivity
 import com.example.travelapp.ui.tickets.TicketsActivity

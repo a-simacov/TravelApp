@@ -1,4 +1,4 @@
-package com.example.travelapp.ui.ui.theme
+package com.example.travelapp.ui.hotels.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
