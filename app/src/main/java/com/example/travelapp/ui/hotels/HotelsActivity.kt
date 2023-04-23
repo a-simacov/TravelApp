@@ -47,6 +47,7 @@ class HotelsActivity : ComponentActivity() {
     }
 
 }
+
 //@Preview(showBackground = false)
 @Composable
 private fun MainContent() {
@@ -116,7 +117,6 @@ private fun HotelGroupItem(city: String = defaultCity, info: String = defaultInf
 
 }
 
-
 @Preview(showBackground = false)
 @Composable
 fun AnotherMainContent() {
@@ -130,7 +130,7 @@ fun AnotherMainContent() {
     ) {
         Text(
             text = stringResource(id = R.string.hotels),
-            modifier = Modifier.padding(start = 18.dp, top = 32.dp),
+            modifier = Modifier.padding(start = 18.dp, top = 32.dp, bottom = 63.dp),
             fontSize = 34.sp
         )
         Column(
@@ -140,53 +140,53 @@ fun AnotherMainContent() {
             verticalArrangement = Arrangement.spacedBy(35.dp)
         ) {
             repeat(3) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(35.dp),
+                AnotherHotelGroupItem(hotels)
+            }
+        }
+    }
+}
+
+@Composable
+fun AnotherHotelGroupItem(hotels: MutableList<Hotel>) {
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(35.dp)
+    ) {
+        hotels.subList(0, 2).forEach { (city, info) ->
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .width(150.dp),
+                shape = RectangleShape,
+                elevation = 7.dp
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
                 ) {
-                    hotels.subList(0, 2).forEach {
-                        (city, info) -> AnotherHotelGroupItem(city, info)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = city,
+                            fontSize = 24.sp,
+                            color = colorResource(id = R.color.hotel_city_card)
+                        )
+                        Image(
+                            modifier = Modifier.padding(top = 17.dp),
+                            painter = painterResource(id = R.drawable.hotels_img),
+                            contentDescription = "hotels icon",
+                            contentScale = ContentScale.Fit
+                        )
+                        Text(
+                            text = info,
+                            fontSize = 15.sp,
+                            modifier = Modifier.padding(17.dp),
+                            color = colorResource(id = R.color.hotel_info_card)
+                        )
                     }
                 }
             }
         }
+
     }
-
-}
-
-@Preview(showBackground = false)
-@Composable
-fun AnotherHotelGroupItem(city: String = defaultCity, info: String = defaultInfo) {
-
-    Card(
-        modifier = Modifier.width(150.dp),
-        shape = RectangleShape,
-        elevation = 7.dp
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = city,
-                    fontSize = 24.sp,
-                    color = colorResource(id = R.color.hotel_city_card)
-                )
-                Image(
-                    modifier = Modifier.padding(top = 17.dp),
-                    painter = painterResource(id = R.drawable.hotels_img),
-                    contentDescription = "hotels icon",
-                    contentScale = ContentScale.Fit
-                )
-                Text(
-                    text = info,
-                    fontSize = 15.sp,
-                    modifier = Modifier.padding(17.dp),
-                    color = colorResource(id = R.color.hotel_info_card)
-                )
-            }
-        }
-    }
-
 }
