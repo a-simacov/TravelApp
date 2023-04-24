@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.example.travelapp.databinding.ActivitySignUpBinding
+import com.example.travelapp.tools.Constants
 import com.example.travelapp.tools.openActivity
+import com.example.travelapp.tools.showToast
 import com.example.travelapp.ui.home.HomeActivity
 
 class SignUpActivity : AppCompatActivity() {
@@ -38,7 +40,10 @@ class SignUpActivity : AppCompatActivity() {
         val pass = binding.etPassSignUp.text.toString()
         val passConfirm = binding.etPassConfirmSignUp.text.toString()
 
-        viewModel.newUser(email, pass, passConfirm)
+        if (pass == passConfirm)
+            viewModel.newUser(email, pass)
+        else
+            showToast(this, Constants.MSG_DIFFERENT_PASSWORDS)
 
     }
 

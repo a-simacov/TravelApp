@@ -95,7 +95,7 @@ fun showSignOutDialog(context: Context) {
 }
 
 fun signOutYesOnClick(context: Context) {
-    val userRepository = (context as App).getUserRepo()
+    val userRepository = (context.applicationContext as App).getUserRepo()
     userRepository.resetAppUser()
     (context as AppCompatActivity).finish()
     openActivity(context, MainActivity::class.java)

@@ -6,6 +6,8 @@ import com.example.travelapp.tools.Constants
 import com.example.travelapp.tools.sendLocalBroadcastError
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
+
 
 class FirebaseAppUserStorage(private val context: Context) {
 
@@ -13,32 +15,24 @@ class FirebaseAppUserStorage(private val context: Context) {
 
     fun getUser(): User? {
         return auth.currentUser?.let {
-            User(name = it.email ?: "")
+            User(name = it.email ?: "", isAuth = true)
         }
     }
 
-    fun signUp(email: String, pass: String): MutableLiveData<User> {
-        val user = MutableLiveData<User>()
-        auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
-            if (task.isSuccessful)
-                user.postValue(User(name = email, isAuth = true))
-            task.exception?.let {
-                sendLocalBroadcastError(context, Constants.LACTION_REPO_ERROR, it.message!!)
-            }
+    suspend fun signUp(email: String, pass: String) {
+        try {
+            auth.createUserWithEmailAndPassword(email, pass).await()
+        } catch (e: Exception) {
+            sendLocalBroadcastError(context, Constants.LACTION_REPO_ERROR, e.message!!)
         }
-        return user
     }
 
-    fun signIn(email: String, pass: String): MutableLiveData<User> {
-        val user = MutableLiveData<User>()
-        auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
-            if (task.isSuccessful)
-                user.postValue(User(name = email, isAuth = true))
-            task.exception?.let {
-                sendLocalBroadcastError(context, Constants.LACTION_REPO_ERROR, it.message!!)
-            }
+    suspend fun signIn(email: String, pass: String) {
+        try {
+            auth.signInWithEmailAndPassword(email, pass).await()
+        } catch (e: Exception) {
+            sendLocalBroadcastError(context, Constants.LACTION_REPO_ERROR, e.message!!)
         }
-        return user
     }
 
     fun signOut() {

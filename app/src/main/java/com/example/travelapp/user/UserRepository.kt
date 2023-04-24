@@ -1,7 +1,6 @@
 package com.example.travelapp.user
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import com.example.travelapp.ui.App
 
 class UserRepository(private val context: Context) {
@@ -13,24 +12,25 @@ class UserRepository(private val context: Context) {
         return firebaseStorage.getUser() ?: defaultStorage.getUser()
     }
 
-    fun setAppUser(email: String, pass: String): MutableLiveData<User> {
-        val user = firebaseStorage.signIn(email, pass)
-        if (user.value?.isAuth == true)
-            (context as App).setUser(user.value!!)
-        return user
+    suspend fun setAppUser(email: String, pass: String): User {
+        firebaseStorage.signIn(email, pass)
+        return getAppUser().also { user ->
+            (context as App).setUser(user)
+        }
     }
 
-    fun newAppUser(email: String, pass: String): MutableLiveData<User> {
-        val user = firebaseStorage.signUp(email, pass)
-        if (user.value?.isAuth == true)
-            (context as App).setUser(user.value!!)
-        return user
+    suspend fun newAppUser(email: String, pass: String): User {
+        firebaseStorage.signUp(email, pass)
+        return getAppUser().also { user ->
+            (context as App).setUser(user)
+        }
     }
 
     fun resetAppUser() {
         firebaseStorage.signOut()
-        val user = defaultStorage.getUser()
-        (context as App).setUser(user)
+        (context as App).setUser(
+            defaultStorage.getUser()
+        )
     }
 
 }

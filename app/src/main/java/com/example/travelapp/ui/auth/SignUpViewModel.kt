@@ -3,10 +3,10 @@ package com.example.travelapp.ui.auth
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.travelapp.tools.Constants
-import com.example.travelapp.tools.showToast
+import androidx.lifecycle.viewModelScope
 import com.example.travelapp.user.User
 import com.example.travelapp.user.UserRepository
+import kotlinx.coroutines.launch
 
 class SignUpViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -17,11 +17,10 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
         userRepository = UserRepository(application.applicationContext)
     }
 
-    fun newUser(email: String, pass: String, passConfirm: String) {
-        if (pass == passConfirm)
-            appUser = userRepository.newAppUser(email, pass)
-//        else
-//            showToast(context, Constants.MSG_DIFFERENT_PASSWORDS)
+    fun newUser(email: String, pass: String) {
+        viewModelScope.launch {
+            appUser.postValue(userRepository.newAppUser(email, pass))
+        }
     }
 
 }
