@@ -10,7 +10,6 @@ import com.example.travelapp.db.Repository
 import com.example.travelapp.db.Ticket
 import com.example.travelapp.network.CityWeather
 import com.example.travelapp.network.NetworkRepo
-import com.example.travelapp.tools.AppUser
 import kotlinx.coroutines.*
 
 // используется именно AndroidViewModel, т.к. она может принимать контекст
@@ -25,7 +24,7 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        userName.value = AppUser.name
+        userName.value = ""//AppUser.name
         initTicketsAndWeather(application.applicationContext)
     }
 

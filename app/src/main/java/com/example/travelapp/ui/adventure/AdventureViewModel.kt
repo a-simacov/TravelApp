@@ -1,7 +1,6 @@
 package com.example.travelapp.ui.adventure
 
 import android.app.Application
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +9,6 @@ import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
 import com.example.travelapp.db.Repository
 import com.example.travelapp.network.RetrofitClient
-import com.example.travelapp.tools.AppUser
 import kotlinx.coroutines.launch
 
 class AdventureViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,7 +21,7 @@ class AdventureViewModel(application: Application) : AndroidViewModel(applicatio
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        userName.value = AppUser.name
+        userName.value = ""//AppUser.name
 
         viewModelScope.launch {
             try {

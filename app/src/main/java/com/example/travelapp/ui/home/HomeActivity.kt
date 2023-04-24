@@ -10,7 +10,6 @@ import com.example.travelapp.R
 import com.example.travelapp.databinding.ActivityHomeBinding
 import com.example.travelapp.tools.*
 import com.example.travelapp.ui.hotels.HotelsActivity
-import com.example.travelapp.ui.SignOutDialog
 import com.example.travelapp.ui.adventure.AdventureActivity
 import com.example.travelapp.ui.tickets.TicketsActivity
 
@@ -19,19 +18,10 @@ class HomeActivity : AppCompatActivity() {
     lateinit var viewModel: HomeViewModel
     lateinit var dataBinding: ActivityHomeBinding
 
-    private val onBackPressedCallback = object : OnBackPressedCallback(AppUser.isAuth) {
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            showDialog()
-        }
-    }
-
-    private fun showDialog(){
-        AlertDialog.Builder(this).apply {
-            setTitle(Constants.DIALOG_TITLE_WARN)
-            setMessage(Constants.MSG_CLOSE_APP)
-            setPositiveButton(Constants.DIALOG_BTN_YES) { _, _ -> finishAffinity() }
-            setNegativeButton(Constants.DIALOG_BTN_NO, null)
-            show()
+            if (viewModel.appUser.value?.isAuth == true)
+                showCloseAppDialog()
         }
     }
 
@@ -47,8 +37,8 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         dataBinding.homeModel = viewModel
         dataBinding.lifecycleOwner = this
-        viewModel.userName.observe(this) {
-            dataBinding.tvUserNameHome.text = it
+        viewModel.appUser.observe(this) { user ->
+            dataBinding.tvUserNameHome.text = user.name
         }
 
         updateUserImg(this, dataBinding.ivUserHome)
@@ -67,7 +57,18 @@ class HomeActivity : AppCompatActivity() {
             openActivity(this, HotelsActivity::class.java)
         }
         dataBinding.ivUserHome.setOnClickListener {
-            if (AppUser.isAuth) SignOutDialog(this).showAlert()
+            //if (AppUser.isAuth) SignOutDialog(this).showAlert()
+            showSignOutDialog(this)
+        }
+    }
+
+    private fun showCloseAppDialog(){
+        AlertDialog.Builder(this).apply {
+            setTitle(Constants.DIALOG_TITLE_WARN)
+            setMessage(Constants.MSG_CLOSE_APP)
+            setPositiveButton(Constants.DIALOG_BTN_YES) { _, _ -> finishAffinity() }
+            setNegativeButton(Constants.DIALOG_BTN_NO, null)
+            show()
         }
     }
 

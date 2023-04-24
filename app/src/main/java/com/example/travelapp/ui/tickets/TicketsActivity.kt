@@ -10,11 +10,9 @@ import com.example.travelapp.adapters.TicketsRecyclerAdapter
 import com.example.travelapp.databinding.ActivityTicketsBinding
 import com.example.travelapp.databinding.TicketDialogBinding
 import com.example.travelapp.db.Ticket
-import com.example.travelapp.tools.AppUser
 import com.example.travelapp.tools.FlightsCountUpdater
 import com.example.travelapp.tools.openSearch
 import com.example.travelapp.tools.updateUserImg
-import com.example.travelapp.ui.SignOutDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class TicketsActivity : AppCompatActivity() {
@@ -68,7 +66,7 @@ class TicketsActivity : AppCompatActivity() {
             openSearch(this, viewModel.searchText.value)
         }
         dataBinding.ivUserTickets.setOnClickListener {
-            if (AppUser.isAuth) SignOutDialog(this).showAlert()
+            //if (AppUser.isAuth) SignOutDialog(this).showAlert()
         }
     }
 
