@@ -1,5 +1,6 @@
 package com.example.travelapp.ui.hotels
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,10 +16,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,12 +33,21 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.travelapp.R
 import com.example.travelapp.db.Hotel
+import com.google.gson.Gson
+
+lateinit var viewModel: HotelsViewModel
 
 class HotelsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(this).get(HotelsViewModel::class.java)
+
         changeContent(this) { MainContent(this) }
     }
 
@@ -42,21 +55,17 @@ class HotelsActivity : ComponentActivity() {
 
 
 fun changeContent(
-
     activity: ComponentActivity,
-    content: @Composable (activity: ComponentActivity?) -> Unit) {
+    content: @Composable (activity: ComponentActivity?) -> Unit
+) {
 
-    activity.setContent {
-        content(activity)
-    }
+    activity.setContent { content(activity) }
 
 }
 
 @Preview(showBackground = false)
 @Composable
 private fun MainContent(activity: ComponentActivity? = null) {
-
-    val hotels = hotels()
 
     Column(
         modifier = Modifier
@@ -74,25 +83,42 @@ private fun MainContent(activity: ComponentActivity? = null) {
             fontSize = 34.sp,
             fontFamily = FontFamily(Font(R.font.raleway_semibold))
         )
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier.padding(bottom = 20.dp)
-        ) {
-            items(items = hotels) { hotel ->
-                HotelItem(hotel)
-            }
-        }
+        HotelItems(viewModel = viewModel)
     }
 
 }
 
 @Composable
+private fun HotelItems(viewModel: HotelsViewModel) {
+
+    val hotels by viewModel.hotels.collectAsState()
+
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = Modifier.padding(bottom = 20.dp)
+    ) {
+        items(items = hotels) { hotel ->
+            HotelItem(hotel)
+        }
+    }
+
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
 private fun HotelItem(hotel: Hotel) {
 
+    val mContext = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 18.dp),
+            .padding(horizontal = 18.dp)
+            .clickable {
+                Intent(mContext, HotelActivity::class.java).also {
+                    it.putExtra("hotel", Gson().toJson(hotel))
+                    mContext.startActivity(it)
+                }
+            },
         shape = RectangleShape,
         elevation = 7.dp
     ) {
@@ -103,24 +129,25 @@ private fun HotelItem(hotel: Hotel) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    modifier = Modifier.padding(end = 11.dp),
-                    painter = painterResource(id = R.drawable.hotels_img),
+                GlideImage(
+                    model = hotel.imageUrl,
+                    modifier = Modifier.padding(end = 11.dp).size(120.dp, 86.dp),
                     contentDescription = "hotels icon",
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.FillWidth
                 )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = hotel.city,
+                        text = hotel.name,
                         fontSize = 24.sp,
                         fontFamily = FontFamily(Font(R.font.raleway_regular)),
-                        color = colorResource(id = R.color.hotel_city_card)
+                        color = colorResource(id = R.color.hotel_city_card),
+                        //fontStyle = FontStyle(R.font.raleway_regular)
                     )
                     Text(
-                        text = hotel.name,
+                        text = hotel.city,
                         fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.raleway_regular)),
                         color = colorResource(id = R.color.hotel_info_card)

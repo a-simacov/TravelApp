@@ -1,39 +1,51 @@
 package com.example.travelapp.ui.hotels
 
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.travelapp.R
+import com.example.travelapp.db.Hotel
+import com.google.gson.Gson
 
 class HotelActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val hotel = Gson().fromJson(
+            intent.getStringExtra("hotel"), Hotel::class.java
+        )
+
         setContent {
-            MainContent()
+            MainContent(hotel)
         }
     }
 }
 
-@Preview(showBackground = true)
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun MainContent() {
-    val text = "The rooms are equipped with air conditioning, central heating, a kitchen and a bathroom. Separate bedrooms can be booked upon request. In addition, a safety deposit box is at your disposal. Guests who prefer to cook on their own will appreciate the fully equipped kitchenette with refrigerator, mini-fridge, microwave and tea/coffee maker. Internet access, telephone, TV, radio and WiFi guarantee a modern level of comfort. There is a bathroom with a shower. Non-smoking rooms are available"
+private fun MainContent(hotel: Hotel) {
+
+    val mContext = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,22 +58,31 @@ private fun MainContent() {
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.hotels_img),
+            GlideImage(
+                model = hotel.imageUrl,
                 contentDescription = "hotels icon",
-                contentScale = ContentScale.Fit
+                modifier = Modifier
+                    .size(width = 146.dp, height = 101.dp)
+                    .clickable {
+                        Toast.makeText(mContext, hotel.city, Toast.LENGTH_LONG).show()
+                    },
+                contentScale = ContentScale.FillWidth
             )
             Text(
-                text = "Test hotel",
+                text = hotel.name,
                 fontSize = 34.sp,
                 fontFamily = FontFamily(Font(R.font.raleway_semibold)),
-                textAlign = TextAlign.End
+                textAlign = TextAlign.Center
             )
         }
         Text(
-            text = text,
+            text = hotel.description,
             fontSize = 20.sp,
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp),
+            modifier = Modifier
+                .padding(start = 24.dp, end = 24.dp)
+                .verticalScroll(
+                    rememberScrollState()
+                ),
             fontFamily = FontFamily(Font(R.font.raleway_regular))
         )
     }
