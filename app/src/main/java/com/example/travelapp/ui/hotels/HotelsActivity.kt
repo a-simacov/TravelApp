@@ -1,10 +1,10 @@
 package com.example.travelapp.ui.hotels
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,17 +14,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -53,7 +51,6 @@ class HotelsActivity : ComponentActivity() {
 
 }
 
-
 fun changeContent(
     activity: ComponentActivity,
     content: @Composable (activity: ComponentActivity?) -> Unit
@@ -63,9 +60,10 @@ fun changeContent(
 
 }
 
-@Preview(showBackground = false)
 @Composable
 private fun MainContent(activity: ComponentActivity? = null) {
+
+    var showPicts by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -73,23 +71,40 @@ private fun MainContent(activity: ComponentActivity? = null) {
             .background(colorResource(id = R.color.pink)),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        Text(
-            text = stringResource(id = R.string.hotels),
-            modifier = Modifier
-                .padding(start = 18.dp, top = 32.dp, bottom = 63.dp)
-                .clickable {
-                    activity?.let { changeContent(it) { AnotherMainContent(activity) } }
-                },
-            fontSize = 34.sp,
-            fontFamily = FontFamily(Font(R.font.raleway_semibold))
-        )
-        HotelItems(viewModel = viewModel)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = stringResource(id = R.string.hotels),
+                modifier = Modifier
+                    .padding(start = 18.dp, top = 32.dp, bottom = 63.dp)
+                    .clickable {
+                        activity?.let { changeContent(it) { AnotherMainContent(activity) } }
+                    },
+                fontSize = 34.sp,
+                fontFamily = FontFamily(Font(R.font.raleway_semibold))
+            )
+            Row(
+                modifier = Modifier
+                    .padding(top = 32.dp, end = 18.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "show pictures")
+                Switch(
+                    checked = showPicts,
+                    onCheckedChange = { showPicts = it }
+                )
+            }
+        }
+        HotelItems(viewModel = viewModel, showPicts)
     }
 
 }
 
 @Composable
-private fun HotelItems(viewModel: HotelsViewModel) {
+private fun HotelItems(viewModel: HotelsViewModel, showPicts: Boolean) {
 
     val hotels by viewModel.hotels.collectAsState()
 
@@ -98,7 +113,7 @@ private fun HotelItems(viewModel: HotelsViewModel) {
         modifier = Modifier.padding(bottom = 20.dp)
     ) {
         items(items = hotels) { hotel ->
-            HotelItem(hotel)
+            HotelItem(hotel, showPicts)
         }
     }
 
@@ -106,19 +121,15 @@ private fun HotelItems(viewModel: HotelsViewModel) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun HotelItem(hotel: Hotel) {
+private fun HotelItem(hotel: Hotel, showPicts: Boolean) {
 
     val mContext = LocalContext.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 18.dp)
-            .clickable {
-                Intent(mContext, HotelActivity::class.java).also {
-                    it.putExtra("hotel", Gson().toJson(hotel))
-                    mContext.startActivity(it)
-                }
-            },
+            .clickable { openHotelActivity(mContext, hotel) },
         shape = RectangleShape,
         elevation = 7.dp
     ) {
@@ -129,12 +140,15 @@ private fun HotelItem(hotel: Hotel) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                GlideImage(
-                    model = hotel.imageUrl,
-                    modifier = Modifier.padding(end = 11.dp).size(120.dp, 86.dp),
-                    contentDescription = "hotels icon",
-                    contentScale = ContentScale.FillWidth
-                )
+                if (showPicts)
+                    GlideImage(
+                        model = hotel.imageUrl,
+                        modifier = Modifier
+                            .padding(end = 11.dp)
+                            .size(120.dp, 86.dp),
+                        contentDescription = "hotels icon",
+                        contentScale = ContentScale.FillWidth
+                    )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -160,27 +174,54 @@ private fun HotelItem(hotel: Hotel) {
 
 }
 
+private fun openHotelActivity(context: Context, hotel: Hotel) {
+
+    Intent(context, HotelActivity::class.java).also {
+        it.putExtra("hotel", Gson().toJson(hotel))
+        context.startActivity(it)
+    }
+
+}
+
 @Preview(showBackground = false)
 @Composable
 fun AnotherMainContent(activity: ComponentActivity? = null) {
 
-    val hotels = hotels()
+    val hotels by viewModel.hotels.collectAsState()
+    var showPicts by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.pink)),
     ) {
-        Text(
-            text = stringResource(id = R.string.hotels),
-            modifier = Modifier
-                .padding(start = 18.dp, top = 32.dp, bottom = 63.dp)
-                .clickable {
-                    activity?.let { changeContent(it) { VerticalGridWithoutPaddings(activity) } }
-                },
-            fontSize = 34.sp,
-            fontFamily = FontFamily(Font(R.font.raleway_semibold))
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = stringResource(id = R.string.hotels),
+                modifier = Modifier
+                    .padding(start = 18.dp, top = 32.dp, bottom = 63.dp)
+                    .clickable {
+                        activity?.let { changeContent(it) { MainContent(activity) } }
+                    },
+                fontSize = 34.sp,
+                fontFamily = FontFamily(Font(R.font.raleway_semibold))
+            )
+            Row(
+                modifier = Modifier
+                    .padding(top = 32.dp, end = 18.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "show pictures")
+                Switch(
+                    checked = showPicts,
+                    onCheckedChange = { showPicts = it }
+                )
+            }
+        }
         LazyVerticalGrid(
             modifier = Modifier
                 .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
@@ -190,26 +231,26 @@ fun AnotherMainContent(activity: ComponentActivity? = null) {
             horizontalArrangement = Arrangement.spacedBy(35.dp)
         ) {
             items(items = hotels) { hotel ->
-                AnotherHotelItem(hotel)
+                AnotherHotelItem(hotel, showPicts)
             }
         }
     }
 
 }
 
-class SampleHotelProvider : PreviewParameterProvider<Hotel> {
-    override val values = sequenceOf(
-        Hotel(city = "Toroni")
-    )
-}
-
-@Preview(showBackground = false)
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun AnotherHotelItem(@PreviewParameter(SampleHotelProvider::class) hotel: Hotel) {
+fun AnotherHotelItem(
+    @PreviewParameter(SampleHotelProvider::class) hotel: Hotel,
+    showPicts: Boolean
+) {
+
+    val mContext = LocalContext.current
 
     Card(
         modifier = Modifier
-            .width(150.dp),
+            .width(150.dp)
+            .clickable { openHotelActivity(mContext, hotel) },
         shape = RectangleShape,
         elevation = 7.dp
     ) {
@@ -224,12 +265,15 @@ fun AnotherHotelItem(@PreviewParameter(SampleHotelProvider::class) hotel: Hotel)
                     fontSize = 24.sp,
                     color = colorResource(id = R.color.hotel_city_card)
                 )
-                Image(
-                    modifier = Modifier.padding(top = 17.dp),
-                    painter = painterResource(id = R.drawable.hotels_img),
-                    contentDescription = "hotels icon",
-                    contentScale = ContentScale.Fit
-                )
+                if (showPicts)
+                    GlideImage(
+                        model = hotel.imageUrl,
+                        modifier = Modifier
+                            .padding(top = 17.dp)
+                            .size(120.dp, 86.dp),
+                        contentDescription = "hotels icon",
+                        contentScale = ContentScale.Crop
+                    )
                 Text(
                     text = hotel.name,
                     fontSize = 15.sp,
@@ -242,60 +286,8 @@ fun AnotherHotelItem(@PreviewParameter(SampleHotelProvider::class) hotel: Hotel)
 
 }
 
-@Preview(showBackground = false)
-@Composable
-fun VerticalGridWithoutPaddings(activity: ComponentActivity? = null) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.pink)),
-    ) {
-        Text(
-            text = stringResource(id = R.string.hotels),
-            modifier = Modifier
-                .padding(start = 18.dp, top = 32.dp, bottom = 63.dp)
-                .clickable {
-                    activity?.let { changeContent(it) { MainContent(activity) } }
-                },
-            fontSize = 34.sp,
-            fontFamily = FontFamily(Font(R.font.raleway_semibold))
-        )
-        LazyVerticalGrid(
-            modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
-                .fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 150.dp),
-        ) {
-            items(20) {
-                Image(
-                    painter = painterResource(id = R.drawable.hotels_img),
-                    contentDescription = "hotels icon",
-                    contentScale = ContentScale.Fit
-                )
-            }
-        }
-    }
-
-}
-
-private fun hotels(): MutableList<Hotel> {
-
-    return mutableListOf(
-        Hotel(city = "Moscow"),
-        Hotel(city = "Novosibirsk"),
-        Hotel(city = "Ekaterinburg"),
-        Hotel(city = "Madrid"),
-        Hotel(city = "Toroni"),
-        Hotel(city = "Burgas"),
-        Hotel(city = "Poligiros"),
-        Hotel(city = "Rybnita"),
-        Hotel(city = "Chisinau"),
-        Hotel(city = "Dubossary"),
-        Hotel(city = "Brasov"),
-        Hotel(city = "Sinaia"),
-        Hotel(city = "Albena"),
-        Hotel(city = "Sofia"),
+class SampleHotelProvider : PreviewParameterProvider<Hotel> {
+    override val values = sequenceOf(
+        Hotel(city = "Toroni")
     )
-
 }
