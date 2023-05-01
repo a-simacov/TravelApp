@@ -34,12 +34,13 @@ class NetworkRepo(private val context: Context) {
         }
     }
 
-    suspend fun getDefaultUserName(): String {
-        return getDefaultUser().getValue("name")
-    }
-
-    private suspend fun getDefaultUser(): Map<String, String> {
-        return RetrofitClient.retroifitService.getUser()
+    suspend fun getDefaultUser(): Map<String, String> {
+        return try {
+            RetrofitClient.retroifitService.getUser()
+        } catch (e: java.lang.Exception) {
+            broadcastError(e.message)
+            mapOf("name" to "default", "image" to "")
+        }
     }
 
     private fun broadcastError(msg: String?) {

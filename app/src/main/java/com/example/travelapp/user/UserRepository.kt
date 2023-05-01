@@ -1,15 +1,18 @@
 package com.example.travelapp.user
 
 import android.content.Context
-import com.example.travelapp.ui.App
+import com.example.travelapp.network.NetworkRepo
+import com.example.travelapp.App
 
 class UserRepository(private val context: Context) {
 
     private val firebaseStorage = FirebaseAppUserStorage(context)
     private val defaultStorage = DefaultAppUserStorage(context)
 
-    fun getAppUser(): User {
-        return firebaseStorage.getUser() ?: defaultStorage.getUser()
+    suspend fun getAppUser(): User {
+        val user = firebaseStorage.getUser() ?: defaultStorage.getUser()
+        user.imgUrl = NetworkRepo(context).getDefaultUserImgUrl()
+        return user
     }
 
     suspend fun setAppUser(email: String, pass: String): User {
@@ -26,7 +29,7 @@ class UserRepository(private val context: Context) {
         }
     }
 
-    fun resetAppUser() {
+    suspend fun resetAppUser() {
         firebaseStorage.signOut()
         (context as App).setUser(
             defaultStorage.getUser()

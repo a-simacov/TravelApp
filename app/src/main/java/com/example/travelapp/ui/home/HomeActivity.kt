@@ -22,6 +22,8 @@ class HomeActivity : AppCompatActivity() {
         override fun handleOnBackPressed() {
             if (viewModel.appUser.value?.isAuth == true)
                 showCloseAppDialog()
+            else
+                finish()
         }
     }
 
@@ -39,9 +41,8 @@ class HomeActivity : AppCompatActivity() {
         dataBinding.lifecycleOwner = this
         viewModel.appUser.observe(this) { user ->
             dataBinding.tvUserNameHome.text = user.name
+            updateUserImg(this, user.imgUrl, dataBinding.ivUserHome)
         }
-
-        updateUserImg(this, dataBinding.ivUserHome)
 
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
@@ -57,8 +58,7 @@ class HomeActivity : AppCompatActivity() {
             openActivity(this, HotelsActivity::class.java)
         }
         dataBinding.ivUserHome.setOnClickListener {
-            //if (AppUser.isAuth) SignOutDialog(this).showAlert()
-            showSignOutDialog(this)
+            showSignOutDialog(this, viewModel.appUser.value)
         }
     }
 

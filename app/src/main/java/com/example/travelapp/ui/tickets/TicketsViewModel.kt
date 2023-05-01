@@ -10,6 +10,8 @@ import com.example.travelapp.db.Repository
 import com.example.travelapp.db.Ticket
 import com.example.travelapp.network.CityWeather
 import com.example.travelapp.network.NetworkRepo
+import com.example.travelapp.user.User
+import com.example.travelapp.user.UserRepository
 import kotlinx.coroutines.*
 
 // используется именно AndroidViewModel, т.к. она может принимать контекст
@@ -18,13 +20,18 @@ class TicketsViewModel(application: Application) : AndroidViewModel(application)
     var tickets = MutableLiveData<List<Ticket>>()
     private val repository: Repository
     val searchText = MutableLiveData("")
-    var userName = MutableLiveData<String>()
+    val appUser = MutableLiveData<User>()
     var weather = MutableLiveData<MutableMap<Ticket, CityWeather>>()
 
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        userName.value = ""//AppUser.name
+
+        val userRepository = UserRepository(application.applicationContext)
+        viewModelScope.launch {
+            appUser.value = userRepository.getAppUser()
+        }
+
         initTicketsAndWeather(application.applicationContext)
     }
 
