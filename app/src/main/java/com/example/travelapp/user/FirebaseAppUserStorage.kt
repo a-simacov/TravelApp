@@ -1,13 +1,11 @@
 package com.example.travelapp.user
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import com.example.travelapp.tools.Constants
 import com.example.travelapp.tools.sendLocalBroadcastError
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-
 
 class FirebaseAppUserStorage(private val context: Context) {
 

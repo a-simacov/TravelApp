@@ -1,10 +1,12 @@
-package com.example.travelapp.ui
+package com.example.travelapp
 
 import android.app.Application
 import com.example.travelapp.receivers.registerBCReceivers
 import com.example.travelapp.user.User
 import com.example.travelapp.user.UserRepository
-import com.example.travelapp.workers.WMLoader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class App : Application() {
 
@@ -14,7 +16,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         userRepository = UserRepository(applicationContext)
-        appUser = userRepository.getAppUser()
+        CoroutineScope(Dispatchers.IO).launch {
+            appUser = userRepository.getAppUser()
+        }
 
         registerBCReceivers(applicationContext)
     }

@@ -8,8 +8,15 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.travelapp.ui.App
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
+import com.example.travelapp.App
 import com.example.travelapp.ui.main.MainActivity
+import com.example.travelapp.user.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -65,27 +72,30 @@ fun getMinDate(dateString: String): String {
     }
 }
 
-fun updateUserImg(context: Context, imageView: ImageView) {
-//    try {
-//        // Используется фейковый заголовок, т.к. домен png.pngtree.com без заголовка возвращает 403 ошибку
-//        val imgUrlWithFakeHeader = GlideUrl(
-//            AppUser.imgUrl, LazyHeaders.Builder()
-//                .addHeader(
-//                    "User-Agent",
-//                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit / 537.36(KHTML, like Gecko) Chrome  47.0.2526.106 Safari / 537.36"
-//                )
-//                .build()
-//        )
-//        Glide.with(context)
-//            .load(imgUrlWithFakeHeader)
-//            .error(com.google.android.material.R.drawable.abc_ic_clear_material)
-//            .into(imageView)
-//    } catch (e: Exception) {
-//        println(e.message)
-//    }
+fun updateUserImg(context: Context, imgUrl: String, imageView: ImageView) {
+    try {
+        // Используется фейковый заголовок, т.к. домен png.pngtree.com без заголовка возвращает 403 ошибку
+        val imgUrlWithFakeHeader = GlideUrl(
+            imgUrl,
+            LazyHeaders.Builder()
+                .addHeader(
+                    "User-Agent",
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit / 537.36(KHTML, like Gecko) Chrome  47.0.2526.106 Safari / 537.36"
+                )
+                .build()
+        )
+        Glide.with(context)
+            .load(imgUrlWithFakeHeader)
+            .error(com.google.android.material.R.drawable.abc_ic_clear_material)
+            .into(imageView)
+    } catch (e: Exception) {
+        println(e.message)
+    }
 }
 
-fun showSignOutDialog(context: Context) {
+fun showSignOutDialog(context: Context, user: User?) {
+    if ((user == null) || !user.isAuth) return
+
     AlertDialog.Builder(context)
         .setTitle(Constants.DIALOG_TITLE_WARN)
         .setMessage(Constants.MSG_SIGN_OUT)
@@ -96,7 +106,9 @@ fun showSignOutDialog(context: Context) {
 
 fun signOutYesOnClick(context: Context) {
     val userRepository = (context.applicationContext as App).getUserRepo()
-    userRepository.resetAppUser()
+    CoroutineScope(Dispatchers.Unconfined).launch {
+        userRepository.resetAppUser()
+    }
     (context as AppCompatActivity).finish()
     openActivity(context, MainActivity::class.java)
 }
