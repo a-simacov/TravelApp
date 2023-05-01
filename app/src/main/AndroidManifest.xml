@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -26,10 +27,10 @@
             android:label="@string/title_activity_hotels"
             android:theme="@style/Theme.TravelApp" />
         <activity
-            android:name=".ui.SignUpActivity"
+            android:name=".ui.auth.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.SignInActivity"
+            android:name=".ui.auth.SignInActivity"
             android:exported="false" />
         <activity
             android:name=".ui.tickets.TicketActivity"
@@ -47,7 +48,7 @@
             android:name=".ui.home.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

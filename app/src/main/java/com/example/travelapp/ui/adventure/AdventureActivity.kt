@@ -10,11 +10,10 @@ import com.example.travelapp.adapters.AdventureRecyclerAdapter
 import com.example.travelapp.databinding.ActivityAdventureBinding
 import com.example.travelapp.databinding.PlacesDialogBinding
 import com.example.travelapp.db.Places
-import com.example.travelapp.tools.AppUser
 import com.example.travelapp.tools.FlightsCountUpdater
 import com.example.travelapp.tools.openSearch
+import com.example.travelapp.tools.showSignOutDialog
 import com.example.travelapp.tools.updateUserImg
-import com.example.travelapp.ui.SignOutDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AdventureActivity : AppCompatActivity() {
@@ -49,11 +48,11 @@ class AdventureActivity : AppCompatActivity() {
 
         FlightsCountUpdater(this).start(dataBinding.tvFlightsCountAdv)
 
-        viewModel.userName.observe(this) {
-            dataBinding.tvUserNameAdv.text = it
+        viewModel.appUser.observe(this) { user ->
+            dataBinding.tvUserNameAdv.text = user.name
+            updateUserImg(this, user.imgUrl, dataBinding.ivUserAdventure)
         }
 
-        updateUserImg(this, dataBinding.ivUserAdventure)
     }
 
     private fun initOnClickListeners() {
@@ -64,7 +63,7 @@ class AdventureActivity : AppCompatActivity() {
             openSearch(this, viewModel.searchText.value)
         }
         dataBinding.ivUserAdventure.setOnClickListener {
-            if (AppUser.isAuth) SignOutDialog(this).showAlert()
+            showSignOutDialog(this, viewModel.appUser.value)
         }
     }
 

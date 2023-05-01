@@ -1,5 +1,6 @@
 package com.example.travelapp.tools
 
+import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.example.travelapp.App
+import com.example.travelapp.ui.main.MainActivity
+import com.example.travelapp.user.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,6 +27,15 @@ fun sendLocalBroadcastInfo(context: Context, action: String, info: String) {
         LocalBroadcastManager.getInstance(context).sendBroadcast(it)
     }
 }
+
+fun sendLocalBroadcastError(context: Context, action: String, error_info: String) {
+    Intent().also {
+        it.action = action
+        it.putExtra("error_info", error_info)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(it)
+    }
+}
+
 
 fun openSearch(context: Context, text: String?) {
     if (text.isNullOrBlank()) return
@@ -56,11 +72,12 @@ fun getMinDate(dateString: String): String {
     }
 }
 
-fun updateUserImg(context: Context, imageView: ImageView) {
+fun updateUserImg(context: Context, imgUrl: String, imageView: ImageView) {
     try {
         // Используется фейковый заголовок, т.к. домен png.pngtree.com без заголовка возвращает 403 ошибку
         val imgUrlWithFakeHeader = GlideUrl(
-            AppUser.imgUrl, LazyHeaders.Builder()
+            imgUrl,
+            LazyHeaders.Builder()
                 .addHeader(
                     "User-Agent",
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit / 537.36(KHTML, like Gecko) Chrome  47.0.2526.106 Safari / 537.36"
@@ -74,4 +91,24 @@ fun updateUserImg(context: Context, imageView: ImageView) {
     } catch (e: Exception) {
         println(e.message)
     }
+}
+
+fun showSignOutDialog(context: Context, user: User?) {
+    if ((user == null) || !user.isAuth) return
+
+    AlertDialog.Builder(context)
+        .setTitle(Constants.DIALOG_TITLE_WARN)
+        .setMessage(Constants.MSG_SIGN_OUT)
+        .setPositiveButton(Constants.DIALOG_BTN_YES) { _, _ -> signOutYesOnClick(context) }
+        .setNegativeButton(Constants.DIALOG_BTN_NO, null)
+        .show()
+}
+
+fun signOutYesOnClick(context: Context) {
+    val userRepository = (context.applicationContext as App).getUserRepo()
+    CoroutineScope(Dispatchers.Unconfined).launch {
+        userRepository.resetAppUser()
+    }
+    (context as AppCompatActivity).finish()
+    openActivity(context, MainActivity::class.java)
 }

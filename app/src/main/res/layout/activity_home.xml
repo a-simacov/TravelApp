@@ -24,7 +24,7 @@
             android:layout_marginEnd="99dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/raleway_semibold"
-            android:text="@{homeModel.userName}"
+            android:text="@{homeModel.appUser.name}"
             android:textSize="40sp"
             app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintEnd_toStartOf="@+id/ivUserHome"

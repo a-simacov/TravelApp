@@ -1,7 +1,6 @@
 package com.example.travelapp.ui.adventure
 
 import android.app.Application
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +9,8 @@ import com.example.travelapp.db.Db
 import com.example.travelapp.db.Places
 import com.example.travelapp.db.Repository
 import com.example.travelapp.network.RetrofitClient
-import com.example.travelapp.tools.AppUser
+import com.example.travelapp.user.User
+import com.example.travelapp.user.UserRepository
 import kotlinx.coroutines.launch
 
 class AdventureViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,14 +18,15 @@ class AdventureViewModel(application: Application) : AndroidViewModel(applicatio
     var places = MutableLiveData<MutableList<Places>>()
     private val repository: Repository
     val searchText = MutableLiveData("")
-    var userName = MutableLiveData<String>()
+    val appUser = MutableLiveData<User>()
 
     init {
         val dao = Db.getDb(application).getDao()
         repository = Repository(dao)
-        userName.value = AppUser.name
+        val userRepository = UserRepository(application.applicationContext)
 
         viewModelScope.launch {
+            appUser.value = userRepository.getAppUser()
             try {
                 places.value = RetrofitClient.retroifitService.getAdventures()
             } catch (e: java.lang.Exception) {

@@ -3,14 +3,20 @@ package com.example.travelapp.ui.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.travelapp.tools.AppUser
+import androidx.lifecycle.viewModelScope
+import com.example.travelapp.user.User
+import com.example.travelapp.user.UserRepository
+import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    var userName = MutableLiveData<String>()
+    val appUser = MutableLiveData<User>()
 
     init {
-        userName.value = AppUser.name
+        val userRepository = UserRepository(application.applicationContext)
+        viewModelScope.launch {
+            appUser.value = userRepository.getAppUser()
+        }
     }
 
 }
